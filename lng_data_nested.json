@@ -1,0 +1,1148 @@
+[
+  {
+    "現貨類型": "中長期約",
+    "countries": [
+      {
+        "country": "俄羅斯",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2013,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2014,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2015,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2016,
+            "amount": 32,
+            "price_total": 127,
+            "price_avg": 396.875
+          },
+          {
+            "year": 2017,
+            "amount": 147,
+            "price_total": 558,
+            "price_avg": 379.5918
+          },
+          {
+            "year": 2018,
+            "amount": 198,
+            "price_total": 914,
+            "price_avg": 461.6162
+          },
+          {
+            "year": 2019,
+            "amount": 148,
+            "price_total": 717,
+            "price_avg": 484.4595
+          },
+          {
+            "year": 2020,
+            "amount": 214,
+            "price_total": 828,
+            "price_avg": 386.9159
+          },
+          {
+            "year": 2021,
+            "amount": 142,
+            "price_total": 635,
+            "price_avg": 447.1831
+          },
+          {
+            "year": 2022,
+            "amount": 83,
+            "price_total": 588,
+            "price_avg": 708.4337
+          }
+        ]
+      },
+      {
+        "country": "其他",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 121,
+            "price_total": 1282.8,
+            "price_avg": 1060.1653
+          },
+          {
+            "year": 2013,
+            "amount": 38,
+            "price_total": 345.4,
+            "price_avg": 908.9474
+          },
+          {
+            "year": 2014,
+            "amount": 60,
+            "price_total": 458,
+            "price_avg": 763.3333
+          },
+          {
+            "year": 2015,
+            "amount": 68,
+            "price_total": 324,
+            "price_avg": 476.4706
+          },
+          {
+            "year": 2016,
+            "amount": 32,
+            "price_total": 103,
+            "price_avg": 321.875
+          },
+          {
+            "year": 2017,
+            "amount": 115,
+            "price_total": 443,
+            "price_avg": 385.2174
+          },
+          {
+            "year": 2018,
+            "amount": 97,
+            "price_total": 474,
+            "price_avg": 488.6598
+          },
+          {
+            "year": 2019,
+            "amount": 100,
+            "price_total": 480,
+            "price_avg": 480
+          },
+          {
+            "year": 2020,
+            "amount": 38,
+            "price_total": 150,
+            "price_avg": 394.7368
+          },
+          {
+            "year": 2021,
+            "amount": 76,
+            "price_total": 381,
+            "price_avg": 501.3158
+          },
+          {
+            "year": 2022,
+            "amount": 32,
+            "price_total": 228,
+            "price_avg": 712.5
+          }
+        ]
+      },
+      {
+        "country": "卡達",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 500,
+            "price_total": 2942.8,
+            "price_avg": 588.56
+          },
+          {
+            "year": 2013,
+            "amount": 598,
+            "price_total": 3729.1,
+            "price_avg": 623.5953
+          },
+          {
+            "year": 2014,
+            "amount": 552,
+            "price_total": 4206,
+            "price_avg": 761.9565
+          },
+          {
+            "year": 2015,
+            "amount": 575,
+            "price_total": 2175,
+            "price_avg": 378.2609
+          },
+          {
+            "year": 2016,
+            "amount": 539,
+            "price_total": 1484,
+            "price_avg": 275.3247
+          },
+          {
+            "year": 2017,
+            "amount": 447,
+            "price_total": 1317,
+            "price_avg": 294.6309
+          },
+          {
+            "year": 2018,
+            "amount": 441,
+            "price_total": 1699,
+            "price_avg": 385.2608
+          },
+          {
+            "year": 2019,
+            "amount": 461,
+            "price_total": 1725,
+            "price_avg": 374.1866
+          },
+          {
+            "year": 2020,
+            "amount": 447,
+            "price_total": 1300,
+            "price_avg": 290.8277
+          },
+          {
+            "year": 2021,
+            "amount": 453,
+            "price_total": 1650,
+            "price_avg": 364.2384
+          },
+          {
+            "year": 2022,
+            "amount": 341,
+            "price_total": 1628,
+            "price_avg": 477.4194
+          }
+        ]
+      },
+      {
+        "country": "印尼",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 190,
+            "price_total": 1850.6,
+            "price_avg": 974
+          },
+          {
+            "year": 2013,
+            "amount": 196,
+            "price_total": 1805.4,
+            "price_avg": 921.1224
+          },
+          {
+            "year": 2014,
+            "amount": 186,
+            "price_total": 1417,
+            "price_avg": 761.828
+          },
+          {
+            "year": 2015,
+            "amount": 215,
+            "price_total": 1097,
+            "price_avg": 510.2326
+          },
+          {
+            "year": 2016,
+            "amount": 190,
+            "price_total": 751,
+            "price_avg": 395.2632
+          },
+          {
+            "year": 2017,
+            "amount": 202,
+            "price_total": 944,
+            "price_avg": 467.3267
+          },
+          {
+            "year": 2018,
+            "amount": 49,
+            "price_total": 257,
+            "price_avg": 524.4898
+          },
+          {
+            "year": 2019,
+            "amount": 28,
+            "price_total": 107,
+            "price_avg": 382.1429
+          },
+          {
+            "year": 2020,
+            "amount": 72,
+            "price_total": 152,
+            "price_avg": 211.1111
+          },
+          {
+            "year": 2021,
+            "amount": 26,
+            "price_total": 138,
+            "price_avg": 530.7692
+          },
+          {
+            "year": 2022,
+            "amount": 7,
+            "price_total": 58,
+            "price_avg": 828.5714
+          }
+        ]
+      },
+      {
+        "country": "巴布亞紐幾內亞",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2013,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2014,
+            "amount": 36,
+            "price_total": 274,
+            "price_avg": 761.1111
+          },
+          {
+            "year": 2015,
+            "amount": 113,
+            "price_total": 518,
+            "price_avg": 458.4071
+          },
+          {
+            "year": 2016,
+            "amount": 114,
+            "price_total": 403,
+            "price_avg": 353.5088
+          },
+          {
+            "year": 2017,
+            "amount": 122,
+            "price_total": 522,
+            "price_avg": 427.8689
+          },
+          {
+            "year": 2018,
+            "amount": 93,
+            "price_total": 533,
+            "price_avg": 573.1183
+          },
+          {
+            "year": 2019,
+            "amount": 245,
+            "price_total": 777,
+            "price_avg": 317.1429
+          },
+          {
+            "year": 2020,
+            "amount": 147,
+            "price_total": 593,
+            "price_avg": 403.4014
+          },
+          {
+            "year": 2021,
+            "amount": 133,
+            "price_total": 723,
+            "price_avg": 543.609
+          },
+          {
+            "year": 2022,
+            "amount": 60,
+            "price_total": 476,
+            "price_avg": 793.3333
+          }
+        ]
+      },
+      {
+        "country": "澳洲",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 19,
+            "price_total": 168.1,
+            "price_avg": 884.7368
+          },
+          {
+            "year": 2013,
+            "amount": 6,
+            "price_total": 56.8,
+            "price_avg": 946.6667
+          },
+          {
+            "year": 2014,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2015,
+            "amount": 20,
+            "price_total": 101,
+            "price_avg": 505
+          },
+          {
+            "year": 2016,
+            "amount": 13,
+            "price_total": 52,
+            "price_avg": 400
+          },
+          {
+            "year": 2017,
+            "amount": 76,
+            "price_total": 304,
+            "price_avg": 400
+          },
+          {
+            "year": 2018,
+            "amount": 207,
+            "price_total": 1075,
+            "price_avg": 519.3237
+          },
+          {
+            "year": 2019,
+            "amount": 359,
+            "price_total": 1768,
+            "price_avg": 492.4791
+          },
+          {
+            "year": 2020,
+            "amount": 374,
+            "price_total": 1336,
+            "price_avg": 357.2193
+          },
+          {
+            "year": 2021,
+            "amount": 412,
+            "price_total": 2044,
+            "price_avg": 496.1165
+          },
+          {
+            "year": 2022,
+            "amount": 256,
+            "price_total": 1723,
+            "price_avg": 673.0469
+          }
+        ]
+      },
+      {
+        "country": "美國",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2013,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2014,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2015,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2016,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2017,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2018,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2019,
+            "amount": 20,
+            "price_total": 90,
+            "price_avg": 450
+          },
+          {
+            "year": 2020,
+            "amount": 28,
+            "price_total": 118,
+            "price_avg": 421.4286
+          },
+          {
+            "year": 2021,
+            "amount": 137,
+            "price_total": 638,
+            "price_avg": 465.6934
+          },
+          {
+            "year": 2022,
+            "amount": 152,
+            "price_total": 979,
+            "price_avg": 644.0789
+          }
+        ]
+      },
+      {
+        "country": "馬來西亞",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 273,
+            "price_total": 2497.3,
+            "price_avg": 914.7619
+          },
+          {
+            "year": 2013,
+            "amount": 299,
+            "price_total": 2636.9,
+            "price_avg": 881.9064
+          },
+          {
+            "year": 2014,
+            "amount": 324,
+            "price_total": 2469,
+            "price_avg": 762.037
+          },
+          {
+            "year": 2015,
+            "amount": 218,
+            "price_total": 1072,
+            "price_avg": 491.7431
+          },
+          {
+            "year": 2016,
+            "amount": 231,
+            "price_total": 856,
+            "price_avg": 370.5628
+          },
+          {
+            "year": 2017,
+            "amount": 208,
+            "price_total": 915,
+            "price_avg": 439.9038
+          },
+          {
+            "year": 2018,
+            "amount": 188,
+            "price_total": 1097,
+            "price_avg": 583.5106
+          },
+          {
+            "year": 2019,
+            "amount": 225,
+            "price_total": 1196,
+            "price_avg": 531.5556
+          },
+          {
+            "year": 2020,
+            "amount": 58,
+            "price_total": 247,
+            "price_avg": 425.8621
+          },
+          {
+            "year": 2021,
+            "amount": 19,
+            "price_total": 98,
+            "price_avg": 515.7895
+          },
+          {
+            "year": 2022,
+            "amount": 6,
+            "price_total": 38,
+            "price_avg": 633.3333
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "現貨類型": "現貨",
+    "countries": [
+      {
+        "country": "俄羅斯",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2013,
+            "amount": 6,
+            "price_total": 63.7,
+            "price_avg": 1061.6667
+          },
+          {
+            "year": 2014,
+            "amount": 6,
+            "price_total": 62,
+            "price_avg": 1033.3333
+          },
+          {
+            "year": 2015,
+            "amount": 25,
+            "price_total": 93,
+            "price_avg": 372
+          },
+          {
+            "year": 2016,
+            "amount": 89,
+            "price_total": 255,
+            "price_avg": 286.5169
+          },
+          {
+            "year": 2017,
+            "amount": 23,
+            "price_total": 73,
+            "price_avg": 317.3913
+          },
+          {
+            "year": 2018,
+            "amount": 32,
+            "price_total": 147,
+            "price_avg": 459.375
+          },
+          {
+            "year": 2019,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2020,
+            "amount": 26,
+            "price_total": 49,
+            "price_avg": 188.4615
+          },
+          {
+            "year": 2021,
+            "amount": 47,
+            "price_total": 575,
+            "price_avg": 1223.4043
+          },
+          {
+            "year": 2022,
+            "amount": 6,
+            "price_total": 79,
+            "price_avg": 1316.6667
+          }
+        ]
+      },
+      {
+        "country": "其他",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 56,
+            "price_total": 475.6,
+            "price_avg": 849.2857
+          },
+          {
+            "year": 2013,
+            "amount": 98,
+            "price_total": 834.9,
+            "price_avg": 851.9388
+          },
+          {
+            "year": 2014,
+            "amount": 120,
+            "price_total": 1119,
+            "price_avg": 932.5
+          },
+          {
+            "year": 2015,
+            "amount": 40,
+            "price_total": 169,
+            "price_avg": 422.5
+          },
+          {
+            "year": 2016,
+            "amount": 89,
+            "price_total": 264,
+            "price_avg": 296.6292
+          },
+          {
+            "year": 2017,
+            "amount": 32,
+            "price_total": 131,
+            "price_avg": 409.375
+          },
+          {
+            "year": 2018,
+            "amount": 87,
+            "price_total": 407,
+            "price_avg": 467.8161
+          },
+          {
+            "year": 2019,
+            "amount": 26,
+            "price_total": 104,
+            "price_avg": 400
+          },
+          {
+            "year": 2020,
+            "amount": 80,
+            "price_total": 139,
+            "price_avg": 173.75
+          },
+          {
+            "year": 2021,
+            "amount": 90,
+            "price_total": 906,
+            "price_avg": 1006.6667
+          },
+          {
+            "year": 2022,
+            "amount": 51,
+            "price_total": 831,
+            "price_avg": 1629.4118
+          }
+        ]
+      },
+      {
+        "country": "卡達",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 80,
+            "price_total": 656.1,
+            "price_avg": 820.125
+          },
+          {
+            "year": 2013,
+            "amount": 12,
+            "price_total": 104.4,
+            "price_avg": 870
+          },
+          {
+            "year": 2014,
+            "amount": 6,
+            "price_total": 46,
+            "price_avg": 766.6667
+          },
+          {
+            "year": 2015,
+            "amount": 87,
+            "price_total": 335,
+            "price_avg": 385.0575
+          },
+          {
+            "year": 2016,
+            "amount": 82,
+            "price_total": 237,
+            "price_avg": 289.0244
+          },
+          {
+            "year": 2017,
+            "amount": 62,
+            "price_total": 225,
+            "price_avg": 362.9032
+          },
+          {
+            "year": 2018,
+            "amount": 42,
+            "price_total": 216,
+            "price_avg": 514.2857
+          },
+          {
+            "year": 2019,
+            "amount": 6,
+            "price_total": 37,
+            "price_avg": 616.6667
+          },
+          {
+            "year": 2020,
+            "amount": 49,
+            "price_total": 90,
+            "price_avg": 183.6735
+          },
+          {
+            "year": 2021,
+            "amount": 24,
+            "price_total": 116,
+            "price_avg": 483.3333
+          },
+          {
+            "year": 2022,
+            "amount": 7,
+            "price_total": 112,
+            "price_avg": 1600
+          }
+        ]
+      },
+      {
+        "country": "印尼",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2013,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2014,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2015,
+            "amount": 20,
+            "price_total": 81,
+            "price_avg": 405
+          },
+          {
+            "year": 2016,
+            "amount": 12,
+            "price_total": 45,
+            "price_avg": 375
+          },
+          {
+            "year": 2017,
+            "amount": 12,
+            "price_total": 54,
+            "price_avg": 450
+          },
+          {
+            "year": 2018,
+            "amount": 65,
+            "price_total": 302,
+            "price_avg": 464.6154
+          },
+          {
+            "year": 2019,
+            "amount": 7,
+            "price_total": 30,
+            "price_avg": 428.5714
+          },
+          {
+            "year": 2020,
+            "amount": 41,
+            "price_total": 86,
+            "price_avg": 209.7561
+          },
+          {
+            "year": 2021,
+            "amount": 91,
+            "price_total": 665,
+            "price_avg": 730.7692
+          },
+          {
+            "year": 2022,
+            "amount": 57,
+            "price_total": 858,
+            "price_avg": 1505.2632
+          }
+        ]
+      },
+      {
+        "country": "巴布亞紐幾內亞",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2013,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2014,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2015,
+            "amount": 23,
+            "price_total": 85,
+            "price_avg": 369.5652
+          },
+          {
+            "year": 2016,
+            "amount": 20,
+            "price_total": 55,
+            "price_avg": 275
+          },
+          {
+            "year": 2017,
+            "amount": 69,
+            "price_total": 257,
+            "price_avg": 372.4638
+          },
+          {
+            "year": 2018,
+            "amount": 23,
+            "price_total": 106,
+            "price_avg": 460.8696
+          },
+          {
+            "year": 2019,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2020,
+            "amount": 16,
+            "price_total": 27,
+            "price_avg": 168.75
+          },
+          {
+            "year": 2021,
+            "amount": 10,
+            "price_total": 43,
+            "price_avg": 430
+          },
+          {
+            "year": 2022,
+            "amount": 33,
+            "price_total": 582,
+            "price_avg": 1763.6364
+          }
+        ]
+      },
+      {
+        "country": "澳洲",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 13,
+            "price_total": 110.1,
+            "price_avg": 846.9231
+          },
+          {
+            "year": 2013,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2014,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2015,
+            "amount": 5,
+            "price_total": 21,
+            "price_avg": 420
+          },
+          {
+            "year": 2016,
+            "amount": 13,
+            "price_total": 34,
+            "price_avg": 261.5385
+          },
+          {
+            "year": 2017,
+            "amount": 25,
+            "price_total": 94,
+            "price_avg": 376
+          },
+          {
+            "year": 2018,
+            "amount": 49,
+            "price_total": 240,
+            "price_avg": 489.7959
+          },
+          {
+            "year": 2019,
+            "amount": 80,
+            "price_total": 270,
+            "price_avg": 337.5
+          },
+          {
+            "year": 2020,
+            "amount": 99,
+            "price_total": 243,
+            "price_avg": 245.4545
+          },
+          {
+            "year": 2021,
+            "amount": 214,
+            "price_total": 1975,
+            "price_avg": 922.8972
+          },
+          {
+            "year": 2022,
+            "amount": 204,
+            "price_total": 3633,
+            "price_avg": 1780.8824
+          }
+        ]
+      },
+      {
+        "country": "美國",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2013,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2014,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2015,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2016,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2017,
+            "amount": 0,
+            "price_total": 95,
+            "price_avg": 0
+          },
+          {
+            "year": 2018,
+            "amount": 25,
+            "price_total": 115,
+            "price_avg": 460
+          },
+          {
+            "year": 2019,
+            "amount": 30,
+            "price_total": 97,
+            "price_avg": 323.3333
+          },
+          {
+            "year": 2020,
+            "amount": 73,
+            "price_total": 165,
+            "price_avg": 226.0274
+          },
+          {
+            "year": 2021,
+            "amount": 39,
+            "price_total": 336,
+            "price_avg": 861.5385
+          },
+          {
+            "year": 2022,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          }
+        ]
+      },
+      {
+        "country": "馬來西亞",
+        "data": [
+          {
+            "year": 2012,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2013,
+            "amount": 0,
+            "price_total": 0,
+            "price_avg": 0
+          },
+          {
+            "year": 2014,
+            "amount": 6,
+            "price_total": 47,
+            "price_avg": 783.3333
+          },
+          {
+            "year": 2015,
+            "amount": 12,
+            "price_total": 47,
+            "price_avg": 391.6667
+          },
+          {
+            "year": 2016,
+            "amount": 31,
+            "price_total": 90,
+            "price_avg": 290.3226
+          },
+          {
+            "year": 2017,
+            "amount": 92,
+            "price_total": 316,
+            "price_avg": 343.4783
+          },
+          {
+            "year": 2018,
+            "amount": 85,
+            "price_total": 386,
+            "price_avg": 454.1176
+          },
+          {
+            "year": 2019,
+            "amount": 23,
+            "price_total": 60,
+            "price_avg": 260.8696
+          },
+          {
+            "year": 2020,
+            "amount": 13,
+            "price_total": 32,
+            "price_avg": 246.1538
+          },
+          {
+            "year": 2021,
+            "amount": 31,
+            "price_total": 253,
+            "price_avg": 816.129
+          },
+          {
+            "year": 2022,
+            "amount": 27,
+            "price_total": 412,
+            "price_avg": 1525.9259
+          }
+        ]
+      }
+    ]
+  }
+]
