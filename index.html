@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>進入能源轉型過渡期，台灣天然氣發電占比將過半</title>
+    <title>天然氣撐起台灣發電，但航線及價格韌性備受考驗？</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -195,6 +195,21 @@
             line-height: 1.4;
         }
 
+        /* 圖表標題區間距調整 */
+        #chart-title {
+            margin-bottom: -90px;
+        }
+
+        /* 參考資料區間距調整 */
+        #references {
+            margin-top: -70px;
+            margin-bottom: 40px;
+        }
+
+        .reference-text {
+            padding: 10px 0 15px 0;
+        }
+
         /* 圖表容器 */
         .chart-container {
             background: #f7fafc;
@@ -353,141 +368,6 @@
                 padding: 5px;
                 box-sizing: border-box;
             }
-        }
-
-        /* === 專家音頻區塊樣式（簡化版） === */
-        .expert-audio-section {
-            margin: 2rem 0;
-        }
-
-        .expert-audio-container {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .expert-profile {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .expert-avatar {
-            position: relative;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .expert-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .avatar-fallback {
-            display: none;
-            width: 100%;
-            height: 100%;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
-        }
-
-        .expert-info h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin: 0 0 0.25rem 0;
-        }
-
-        .expert-info p {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin: 0 0 0.5rem 0;
-        }
-
-        .audio-topic {
-            font-size: 0.85rem;
-            color: #3D7878;
-            font-weight: 500;
-        }
-
-        .simple-audio-player {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 1rem;
-        }
-
-        .audio-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .play-btn {
-            background: #3D7878;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .play-btn:hover {
-            background: #2c5f5f;
-            transform: scale(1.05);
-        }
-
-        .progress-area {
-            flex: 1;
-        }
-
-        .time-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-bar {
-            position: relative;
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #3D7878;
-            border-radius: 3px;
-            width: 0%;
-            transition: width 0.1s ease;
-        }
-
-        .progress-slider {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
         }
 
         /* 小屏手機設備特殊優化 */
@@ -1252,66 +1132,6 @@
             background: #2563EB;
             border-color: #2563EB;
         }
-
-        /* === 音頻播放器響應式設計 === */
-        @media (max-width: 768px) {
-            .expert-profile {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.75rem;
-            }
-
-            .audio-controls {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .progress-area {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .expert-audio-container {
-                padding: 1rem;
-                margin: 1rem -10px;
-            }
-
-            .expert-profile {
-                margin-bottom: 1rem;
-                padding-bottom: 0.75rem;
-            }
-
-            .expert-avatar {
-                width: 50px;
-                height: 50px;
-            }
-
-            .expert-info h3 {
-                font-size: 1.1rem;
-            }
-
-            .expert-info p {
-                font-size: 0.85rem;
-            }
-
-            .audio-topic {
-                font-size: 0.8rem;
-            }
-
-            .simple-audio-player {
-                padding: 0.75rem;
-            }
-
-            .play-btn {
-                width: 36px;
-                height: 36px;
-            }
-
-            .time-info {
-                font-size: 0.75rem;
-            }
-        }
     </style>
 </head>
 
@@ -1325,9 +1145,9 @@
     <section class="parallax-container" id="hero">
         <div class="parallax-bg" id="parallaxBg"></div>
         <div class="hero-content">
-            <h1 class="hero-title">進入能源轉型過渡期，<br>台灣天然氣發電占比將過半</h1>
+            <h1 class="hero-title">天然氣撐起台灣發電，<br>但航線及價格韌性備受考驗？</h1>
             <p class="hero-subtitle">南海爭端未解、俄烏戰事持續、卡達海運風險上升。儘管台灣試圖分散航線的地緣政治風險，天然氣供應仍集中於澳洲、美國與卡達。</p>
-            <p class="hero-byline">文｜丁祈、戴悅鈴、黃俐珏</p>
+            <p class="hero-byline">文｜丁祈、戴悦鈴、黃俐珏</p>
             <div class="hero-image-credit">封面天然氣接收站圖由AI生成</div>
         </div>
     </section>
@@ -1357,62 +1177,66 @@
 
 
                 <div class="section-content fade-in">
-                    <p>根據聯合國下組織「政府間氣候變化專門委員會」指出，為了把全球暖化限制在1.5°C以內，全球需要在2050年前達到淨零排放，對此世界已有130多國提出「2050淨零排放」的宣示與行動。雖然台灣並非聯合國會員，沒有被明文要求，但作為一個海島國家，台灣本就面臨更高的氣候風險。此外，由於許多重要貿易國如美國、歐盟、日本等已明確設定
-                        2050 淨零，為了確保供應鏈穩定與市場競爭力，台灣必須跟上國際低碳轉型步伐。<br><br></p>
-                    <p>2025隨著核三廠停機，台灣正式邁入「非核家園」時代，為了達成2022年行政院宣布的2050淨零目標。賴政府也在今年公布的「國家減碳新目標」草案中，提出了相較於 2005 年基準年，台灣在
-                        2032 年減碳 32±2%、2035 年減碳 38±2% 的目標。作為因應，經濟部預估天然氣在台灣的發電占比，預計從 2024 年的 47%，提高到 2032 年和 2035 年的
-                        54%，綠能則目標2032到達31%，2035到達36%，進一步壓縮煤炭發電的占比，以天然氣持續作為台灣發展綠電的過度能源，降低煤炭發電所造成的高碳排和空氣汙染問題。</p>
+                    <h3 class="section-title slide-in-left">進入能源轉型過渡期，台灣天然氣發電占比將過半</h3>
+                    <p>根據聯合國下組織「政府間氣候變化專門委員會」指出，為了把全球暖化限制在 1.5°C 以內，全球需要在 2050 年以前達到淨零排放，對此世界已有 130 多國提出「2050
+                        淨零排放」的宣示與行動。雖然台灣並非聯合國會員，沒有被明文要求，但作為一個海島國家，台灣本就面臨更高的氣候風險。此外，由於許多重要貿易國如美國、歐盟、日本等已明確設定 2050
+                        淨零，為了確保供應鏈穩定與市場競爭力，台灣必須跟上國際低碳轉型步伐。<br><br></p>
+                    <p>2025 年隨著核三廠停機，台灣正式邁入「非核家園」時代，為了達成 2022 年行政院宣布的 2050 淨零目標。賴政府也在今年公布的「國家減碳新目標」草案中，提出了相較於 2005
+                        年基準年，台灣在 2032 年減碳 32 ± 2%、2035 年減碳 38 ± 2% 的目標。作為因應，經濟部預估天然氣在台灣的發電占比，預計從 2024 年的 47%，提高到 2032 年和
+                        2035 年的 54%，綠能則目標 2032 年到達31%，2035 年到達
+                        36%，進一步壓縮煤炭發電的占比，以天然氣持續作為台灣發展綠電的過度能源，降低煤炭發電所造成的高碳排和空氣汙染問題。</p>
                 </div>
 
                 <!-- 統計卡片 -->
                 <div class="stats-grid">
                     <div class="stat-card" data-number="0" data-target="47" data-unit="%">
-                        <div class="stat-number">47%</div>
-                        <div class="stat-label">2024年天然氣發電占比</div>
+                        <div class="stat-number">47 %</div>
+                        <div class="stat-label">2024 年天然氣發電占比</div>
                     </div>
                     <div class="stat-card" data-number="0" data-target="73" data-unit="%">
-                        <div class="stat-number">73%</div>
-                        <div class="stat-label">2024年三大供應國占比</div>
+                        <div class="stat-number">73 %</div>
+                        <div class="stat-label">2024 年三大供應國占比</div>
                     </div>
                     <div class="stat-card" data-number="0" data-target="691" data-unit="億">
-                        <div class="stat-number">691億</div>
-                        <div class="stat-label">2024年中油虧損</div>
+                        <div class="stat-number">691 億</div>
+                        <div class="stat-label">2024 年中油虧損</div>
                     </div>
                 </div>
             </section>
 
             <!-- 數據視覺化區 -->
             <section class="section" id="data">
-                <h3 class="section-title slide-in-left">2026天然氣價格預計走低，<br>但供應鏈的不穩定依然威脅台灣能源安全</h3>
+                <h3 class="section-title slide-in-left">2026 天然氣價格預計走低，<br>但供應鏈的不穩定依然威脅台灣能源安全</h3>
                 <div class="chart-container slide-in-right">
-                    <h3 class="chart-title">台灣2000~2024各能源發電量占比變化</h3>
+                    <h3 class="chart-title">台灣 2000 - 2024 各能源發電量占比變化</h3>
                     <img src="images/image1.png" alt="發電量占比變化圖" class="chart-image">
                     <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">資料來源：台灣電力公司</p>
                 </div>
 
                 <div class="section-content slide-in-left">
-                    <p>根據 2016 年蔡政府能源轉型白皮書草案，明確提出「2025 年再生能源占比 20%、燃氣發電 50%、燃煤降到 30%
-                        以下」的能源目標。雖然最終並未達標，但從數據仍可看出2016後往綠能轉型的趨勢。<br><br>
-                        接下來數十年，天然氣都將持續扮演台灣能源轉型的關鍵角色，因此天然氣價格對於台灣的電價至關重要。所幸，根據美國四大會計師事務所之一的德勤（Deloitte）預計2026後天然氣的價格將逐漸下降，對於天然氣需求逐年攀升的台灣是不錯的消息。<br><br>
-                        國際能源總署(International Energy Agency，簡稱IEA)在《2024世界能源展望》也提到 2030
+                    <p>根據 2016 年蔡政府能源轉型白皮書草案，明確提出「 2025 年再生能源占比 20 %、燃氣發電 50 %、燃煤降到 30 % 以下」的能源目標。雖然最終並未達標，但從數據仍可看出 2016
+                        年後往綠能轉型的趨勢。<br><br>
+                        接下來數十年，天然氣都將持續扮演台灣能源轉型的關鍵角色，因此天然氣價格對於台灣的電價至關重要。所幸，根據美國四大會計師事務所之一的德勤（Deloitte）預計 2026
+                        年後天然氣的價格將逐漸下降，對於天然氣需求逐年攀升的台灣是不錯的消息。<br><br>
+                        國際能源總署（International Energy Agency，簡稱IEA）在《2024世界能源展望》也提到 2030
                         年天然氣需求達到峰值後就會開始下降，可見長期來看台灣有望用更低的價格購氣。然而報告也提到，由於地緣衝突不斷，現在的國際供應鏈還是很脆弱。可見不論是國際產氣大國間的政治角力，或是重要航道因為戰爭中斷，都可能進一步推高天然氣價格。對此，本新聞將透過數據深入探討台灣面臨的天然氣價格風險。回答台灣天然氣歷年來選擇的進口國發生什麼變化？每個進口國的簽約種類以及簽約價格有沒有不同？歷年發生戰爭和天災時，台灣購氣價格產生哪些影響？讓讀者了解進口天然氣背後有哪些風險，又該採取哪些策略面對挑戰。
                     </p>
                 </div>
 
                 <h3 class="section-title slide-in-left">三國掌握七成供應，台灣天然氣來源集中化加劇</h3>
                 <div class="chart-container slide-in-right">
-                    <h3 class="chart-title">台灣2006-2024液化天然氣供應國之進口量占比</h3>
+                    <h3 class="chart-title">台灣 2006 - 2024 液化天然氣供應國之進口量占比</h3>
                     <img src="images/image5.png" alt="LNG進口量占比圖" class="chart-image">
                     <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">資料來源：經濟部能源署</p>
                 </div>
 
                 <div class="section-content slide-in-left">
-                    <p>從圖表二可看出，台灣液化天然氣（LNG）進口結構在過去十多年出現顯著變化。根據經濟部能源署統計，2006 年至 2014 年，台灣進口
-                        LNG多來自東南亞鄰近國家，如馬來西亞與印尼，呈現「區域集中但來源分散」的格局。<br><br>
-                        然而自 2015 年起，澳洲供氣快速增長，至 2024 年占比已接近四成，坐上台灣最大供應國地位；同時，美國自 2019 年起穩定供應，2024
-                        年占比達10%，超越馬來西亞與印尼，成為第三大來源。卡達則持續穩定供應約四分之一。至 2024 年，這三個國家合計已占台灣 LNG 進口量逾七成，顯示出「來源國集中化」的趨勢。<br><br>
-                        2018 年曾被視為進口來源最為分散的時期，《能源報導》亦指出，當年台灣 LNG 進口風險指數創下
-                        2000年以來新低。但隨後數年，來源逐漸集中於少數國家，雖可能有助於控制價格波動，卻也帶來「一國出事、全盤受衝擊」的潛在風險。
+                    <p>從台灣 2006 - 2024 液化天然氣供應國之進口量占比圖可看出，台灣液化天然氣（LNG）進口結構在過去十多年出現顯著變化。根據經濟部能源署統計，2006 年至 2014 年，台灣進口
+                        LNG 多來自東南亞鄰近國家，如馬來西亞與印尼，呈現「區域集中但來源分散」的格局。<br><br>
+                        然而自 2015 年起，澳洲供氣快速增長，至 2024 年占比已接近四成，坐上台灣最大供應國地位；同時，美國自 2019 年起穩定供應，2024 年占比達
+                        10%，超越馬來西亞與印尼，成為第三大來源。卡達則持續穩定供應約四分之一。至 2024 年，這三個國家合計已占台灣 LNG 進口量逾七成，顯示出「來源國集中化」的趨勢。<br><br>
+                        2018 年曾被視為進口來源最為分散的時期，《能源報導》亦指出，當年台灣 LNG 進口風險指數創下 2000
+                        年以來新低。但隨後數年，來源逐漸集中於少數國家，雖可能有助於控制價格波動，卻也帶來「一國出事、全盤受衝擊」的潛在風險。
                     </p>
                 </div>
 
@@ -1424,15 +1248,16 @@
             <section class="section" id="map">
                 <h2 class="section-title slide-in-left">洲別多元帶動航線多元，<br>台灣開拓能源避險新路徑</h2>
                 <div class="section-content slide-in-left">
-                    <p>從圖表三的世界地圖來看，台灣目前LNG進口來源已遍及亞洲、中東、大洋洲與北美洲，與早期主要仰賴亞洲區域相比，逐步轉向「洲際多元化」的布局。這樣的轉變雖未擴大來源國數量，但有效拓展了天然氣航線的選擇空間與策略彈性。
+                    <p>從台灣天然氣進口國（澳洲、卡達、美國、俄羅斯）航線圖來看，台灣目前 LNG
+                        進口來源已遍及亞洲、中東、大洋洲與北美洲，與早期主要仰賴亞洲區域相比，逐步轉向「洲際多元化」的布局。這樣的轉變雖未擴大來源國數量，但有效拓展了天然氣航線的選擇空間與策略彈性。
                     </p>
                 </div>
             </section>
 
             <!-- 圖表標題區 -->
             <section class="section" id="chart-title">
-                <div class="section-content">
-                    <h3 class="chart-main-title">圖表三：台灣天然氣進口國（澳洲、卡達、美國、俄羅斯）航線圖</h3>
+                <div class="chart-container slide-in-right">
+                    <h3 class="chart-title">圖表三：台灣天然氣進口國（澳洲、卡達、美國、俄羅斯）航線圖</h3>
                 </div>
             </section>
 
@@ -1513,7 +1338,7 @@
             </section>
 
             <!-- 新增正文區塊 -->
-            <section class="section" id="analysis">
+            <section class="section" id="supply-chain-risks">
                 <h2 class="section-title fade-in">天然氣價格風險與供應鏈挑戰</h2>
 
                 <div class="section-content fade-in">
@@ -1532,12 +1357,14 @@
             </section>
 
             <!-- 新增正文區塊 -->
-            <section class="section" id="analysis">
+            <section class="section" id="price-volatility">
                 <h2 class="section-title fade-in">天然氣進口價格波動，現貨價受市場影響劇烈</h2>
 
                 <div class="section-content fade-in">
-                    <p>台灣的天然氣採購方案分為兩種——契約期間1年以上的中長約和1年以下的現貨採購。目前作為發電主力的前三大天然氣進口來源——澳洲、卡達和美國皆是中長期合約佔比較多，價格波動較小，能夠維持基礎發電量。進口國如印尼、馬來西亞，則是在2017和2020年合約期滿後轉以現貨為主，作為天然氣進口多元化的補充來源。<br><br>
-                        在價格部分，天然氣現貨採購價格受國際市場波動影響，其價格的變化與地緣政治、運輸風險、氣候因素、市場競爭和出口國能源政策調整息息相關。</p>
+                    <p>台灣的天然氣採購方案分為兩種——契約期間1年以上的中長約和1年以下的現貨採購。目前作為發電主力的前三大天然氣進口來源——澳洲、卡達和美國皆是中長期合約佔比較多，價格波動較小，能夠維持基礎發電量。進口國如印尼、馬來西亞，則是在
+                        2017 和 2020
+                        年合約期滿後轉以現貨為主，作為天然氣進口多元化的補充來源。<br><br>在價格部分，天然氣現貨採購價格受國際市場波動影響，其價格的變化與地緣政治、運輸風險、氣候因素、市場競爭和出口國能源政策調整息息相關。
+                    </p>
                 </div>
 
                 <div class="chart-container fade-in">
@@ -1558,22 +1385,24 @@
                 </div>
 
                 <div class="section-content fade-in">
-                    <p>根據中油的天然氣進口來源及數量統計，中長期約和現貨價格在2012至2022年呈現一致的走勢。其中價格波動劇烈的時間點有三個。<br><br> 首先2018年2 月至 3
-                        月巴布亞紐幾內亞發生地震，距震央約 600
-                        公里的LNG廠被迫停擺，直至 4 月 16 日恢復營運，波及亞洲 LNG 現貨價格上揚。到了2020年，隨著國際天然氣市場眾多 LNG 出口計畫陸續啟用，澳洲、美國及俄羅斯等國帶動全球 LNG
-                        出口產能，國際市場供過於求。於市場供應過剩之情境下，天然氣現貨價格下跌，並出現低於中長約之狀況。因此，現貨的靈活性為市場買家帶來更多可操作空間，台灣也轉向提高現貨進口。然而2022年俄烏戰爭爆發，天然氣價格受到衝擊，通過計算台灣歷年天然氣進口平均單價，我們發現在2020年至2022年，2年間，天然氣的中長約價格增加一倍，現貨價格變成原本的近
-                        8 倍。地緣政治和戰爭對於天然氣價格的影響由此體現。
+                    <p>根據中油的天然氣進口來源及數量統計，中長期約和現貨價格在 2012 至 2022 年呈現一致的走勢。其中價格波動劇烈的時間點有三個。<br><br>
+                        首先 2018 年 2 月至 3 月巴布亞紐幾內亞發生地震，距震央約 600 公里的LNG廠被迫停擺，直至 4 月 16 日恢復營運，波及亞洲 LNG 現貨價格上揚。到了 2020
+                        年，隨著國際天然氣市場眾多 LNG 出口計畫陸續啟用，澳洲、美國及俄羅斯等國帶動全球 LNG
+                        出口產能，國際市場供過於求。於市場供應過剩之情境下，天然氣現貨價格下跌，並出現低於中長約之狀況。因此，現貨的靈活性為市場買家帶來更多可操作空間，台灣也轉向提高現貨進口。然而 2022
+                        年俄烏戰爭爆發，天然氣價格受到衝擊，通過計算台灣歷年天然氣進口平均單價，我們發現在 2020 年至 2022 年，2 年間，天然氣的中長約價格增加一倍，現貨價格變成原本的近 8
+                        倍。地緣政治和戰爭對於天然氣價格的影響由此體現。
                     </p>
                 </div>
             </section>
 
             <!-- 新增正文區塊 -->
-            <section class="section" id="analysis">
-                <h2 class="section-title fade-in">電價凍漲，中油台電虧本賣氣和電</h2>
+            <section class="section" id="price-freeze-policy">
+                <h2 class="section-title fade-in">電價凍漲，中油虧本賣氣和電</h2>
 
                 <div class="section-content fade-in">
-                    <p>面對天然氣價格的暴漲，國內天然氣牌價則沒有過度的調漲，探究其原因，是中油在背後默默吸收成本。截止2025年1月18日，
-                        受油氣補貼政策拖累，中油2024年營收1.1兆元，累積虧損691億，財務狀況堪憂。在2023年做客寶島聯播網時，當時的中油董事長李順欽也曾表示「我給電業（用戶）打8折多，我對民生工業打四折在賣」。
+                    <p> 面對天然氣價格的暴漲，國內天然氣牌價則沒有過度的調漲，探究其原因，是中油在背後默默吸收成本。截止 2025 年 1 月 18 日， 受油氣補貼政策拖累，中油 2024 年營收 1.1
+                        兆元，累積虧損 691 億，財務狀況堪憂。在 2023 年做客寶島聯播網時，當時的中油董事長李順欽也曾表示「我給電業（用戶）打 8 折多，我對民生工業打 4
+                        折在賣」。然而即使中油已經虧本賣氣，台電依然有虧本售電情形，據台電統計 2025 預估虧損約為 4,700 億元。
                     </p>
                 </div>
 
@@ -1595,14 +1424,14 @@
                 </div>
 
                 <div class="section-content fade-in">
-                    <p>但整體而言，受俄烏戰爭、全球能源價格波動，台灣2025年發電成本已經較原本預估的3.2–3.4 元/kWh，調漲至 3.9 元。且 2022 年起，開始減少對台積電等工業大戶的補貼，電價調幅達
-                        50%，而民生僅調 7%。台灣環境規劃協會理事長趙家緯表示，過去台積電用電比住家還便宜，現在結構已調整為「民生負擔較低，企業承擔較多」。
-                        至於未來中油還要不要虧本吸收成本？台電究竟該不該漲價？目前政府的回答是「考量國際關稅變化與地緣政治風險，為照顧民生、穩定物價，2025年上半年電價不漲不降」。
+                    <p>但整體而言，受俄烏戰爭、全球能源價格波動，台灣 2025 年發電成本已經較原本預估的 3.2 - 3.4 元/kWh，調漲至 3.9 元。且 2022
+                        年起，開始減少對台積電等工業大戶的補貼，電價調幅達 50%，而民生僅調 7%。台灣環境規劃協會理事長趙家緯表示，過去台積電用電比住家還便宜，現在結構已調整為「民生負擔較低，企業承擔較多」。
+                        至於未來中油還要不要虧本吸收成本？台電究竟該不該漲價？目前政府的回答是「考量國際關稅變化與地緣政治風險，為照顧民生、穩定物價，2025 年上半年電價不漲不降」。
                     </p>
                 </div>
 
                 <div class="chart-container fade-in">
-                    <h3 class="chart-title">亞洲LNG價格走勢圖 (2012-2024)</h3>
+                    <h3 class="chart-title">亞洲LNG價格走勢圖 （2012-2024）</h3>
                     <div id="asiaLngPriceChart"
                         style="width: 100%; min-height: 320px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; position: relative; overflow: visible; padding: 5px;">
                     </div>
@@ -1611,79 +1440,17 @@
                 </div>
 
                 <div class="section-content fade-in">
-                    <p>而從天然氣在亞洲市場的走勢來看，隨著需求疲軟、替代燃料價格更低，和持續的貿易緊張影響，亞洲液化天然氣（LNG）價格在2023年後逐漸下跌，並於2025年4月29日跌至約一年來最低，也促進中油買進一批6月交貨的LNG。但是隨時歐洲的嚴冬、俄羅斯産天然氣的流入減少，中美貿易戰、美國天然氣價格攀升等影響，亞洲市場價格可能會受到聯動影響，從而在台灣能源轉型的背景下，導致發電成本上升和電價持續上漲。<br><br>
-                        所幸，根據美國四大會計師事務所之一的德勤（Deloitte）預計2025~2026亞洲JKM價格（Japan Korea Marker，反映亞洲地區LNG買賣的現貨價格)約
-                        13~15美元/MMBtu（Million British Thermal
-                        Units，百萬英熱單位）。但到了2026以後，隨著美國、卡達LNG新產能上線、中國、印度等主要進口國經濟成長減緩，LNG價格預期逐步下滑，亞洲價格降至 12~13
-                        美元/MMBtu。<br><br>
+                    <p>而從天然氣在亞洲市場的走勢來看，隨著需求疲軟、替代燃料價格更低，和持續的貿易緊張影響，亞洲液化天然氣價格在 2023 年後逐漸下跌，並於 2025 年 4 月 29
+                        日跌至約一年來最低，也促進中油買進一批 6 月交貨的
+                        LNG。但是隨時歐洲的嚴冬、俄羅斯産天然氣的流入減少，中美貿易戰、美國天然氣價格攀升等影響，亞洲市場價格可能會受到聯動影響，從而在台灣能源轉型的背景下，導致發電成本上升和電價持續上漲。<br><br>
+                        所幸，根據美國四大會計師事務所之一的德勤（Deloitte）預計 2025 - 2026 亞洲 JKM 價格（Japan Korea Marker，反映亞洲地區LNG買賣的現貨價格）約 13
+                        - 15美元/MMBtu（Million British Thermal Units，百萬英熱單位）。但到了 2026 年以後，隨著美國、卡達 LNG
+                        新產能上線、中國、印度等主要進口國經濟成長減緩， LNG 價格預期逐步下滑，亞洲價格降至 12 - 13 美元/MMBtu。<br><br>
                     </p>
-                    <p>最後，為了因應台灣「非核家園」時代，和2050淨零目標，天然氣佔台灣整體發電比例勢必將繼續增加。<br><br>
-                    </p>
-                    <p>而在和台灣環境規劃協會理事長趙家緯的訪談中，我們也聊到了若台灣依舊高度依賴天然氣，且中油和台電負債持續增加，台灣應該怎麼做？他說：我們可能需要效法日本施行「電業自由化」，以民盈企業替代國營企業，正常將國際天然氣價格波動反映在日常的電價上，或者就像法國的法國能源監管委員會一樣，設立具公信力的電力監理機構負責監管台灣的電力和天然氣市場，避免台電一家獨大且給予更符合市場機制補貼政策。因為更多的時候我們不能只想要蓋電廠，擴大供電量，而是應該努力去做節能，省下來的電成本更便宜，而且對我們的環境也更有意義。
+                    <p>最後，雖然大環境的改善和漲電價有助於改善中油和台電赤字，台灣環境規劃協會理事長趙家緯還是也提到：我們可能需要效法日本施行「電業自由化」，以民盈企業替代國營企業，正常將國際天然氣價格波動反映在日常的電價上，或者就像法國的法國能源監管委員會一樣，設立具公信力的電力監理機構負責監管台灣的電力和天然氣市場，避免台電一家獨大且給予更符合市場機制補貼政策。因為更多的時候我們不能只想要蓋電廠，擴大供電量，而是應該努力去做節能，省下來的電成本更便宜，而且對我們的環境也更有意義。
                     </p>
 
 
-                </div>
-
-
-
-
-                <!-- 專家音頻訪談區塊 -->
-                <div class="expert-audio-section fade-in">
-                    <div class="expert-audio-container">
-                        <!-- 專家信息 -->
-                        <div class="expert-profile">
-                            <div class="expert-avatar">
-                                <img src="images/expert-avatar.jpg" alt="專家頭像"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="avatar-fallback">
-                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="24" cy="24" r="24" fill="#f0f4f8" />
-                                        <circle cx="24" cy="18" r="8" fill="#3D7878" />
-                                        <path d="M8 42c0-8.8 7.2-16 16-16s16 7.2 16 16" fill="#3D7878" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="expert-info">
-                                <h3>李能源 博士</h3>
-                                <p>台灣能源政策研究中心主任</p>
-                                <span class="audio-topic">深度解析：天然氣供應鏈的挑戰與機會</span>
-                            </div>
-                        </div>
-
-                        <!-- 音頻播放器 -->
-                        <div class="simple-audio-player">
-                            <audio id="expertAudio" preload="metadata">
-                                <source src="audio/expert-interview.mp3" type="audio/mpeg">
-                                <source src="audio/expert-interview.ogg" type="audio/ogg">
-                                您的瀏覽器不支援音頻播放。
-                            </audio>
-
-                            <div class="audio-controls">
-                                <button class="play-btn" id="playPauseBtn">
-                                    <svg class="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                        <path d="M8 5V19L19 12L8 5Z" fill="currentColor" />
-                                    </svg>
-                                    <svg class="pause-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                        style="display: none;">
-                                        <path d="M6 4H10V20H6V4ZM14 4H18V20H14V4Z" fill="currentColor" />
-                                    </svg>
-                                </button>
-
-                                <div class="progress-area">
-                                    <div class="time-info">
-                                        <span class="current-time">00:00</span>
-                                        <span class="total-time">15:30</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill"></div>
-                                        <input type="range" class="progress-slider" min="0" max="100" value="0">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
             </section>
@@ -3326,88 +3093,6 @@
         // 清理工具提示
         window.addEventListener('beforeunload', function () {
             d3.selectAll('.lng-tooltip').remove();
-        });
-
-        // === 簡化版音頻播放器功能 ===
-        document.addEventListener('DOMContentLoaded', function () {
-            const audio = document.getElementById('expertAudio');
-            const playPauseBtn = document.getElementById('playPauseBtn');
-            const playIcon = playPauseBtn?.querySelector('.play-icon');
-            const pauseIcon = playPauseBtn?.querySelector('.pause-icon');
-            const progressFill = document.querySelector('.progress-fill');
-            const progressSlider = document.querySelector('.progress-slider');
-            const currentTimeDisplay = document.querySelector('.current-time');
-            const totalTimeDisplay = document.querySelector('.total-time');
-
-            // 如果音頻元素不存在，直接返回
-            if (!audio || !playPauseBtn) return;
-
-            // 播放/暫停功能
-            playPauseBtn.addEventListener('click', function () {
-                if (audio.paused) {
-                    audio.play().catch(e => {
-                        console.log('音頻播放失敗:', e);
-                        alert('音頻文件未找到。請將音頻文件放置在 audio/expert-interview.mp3');
-                    });
-                } else {
-                    audio.pause();
-                }
-            });
-
-            // 更新播放按鈕圖標
-            if (playIcon && pauseIcon) {
-                audio.addEventListener('play', function () {
-                    playIcon.style.display = 'none';
-                    pauseIcon.style.display = 'block';
-                });
-
-                audio.addEventListener('pause', function () {
-                    playIcon.style.display = 'block';
-                    pauseIcon.style.display = 'none';
-                });
-            }
-
-            // 更新進度條
-            audio.addEventListener('timeupdate', function () {
-                if (audio.duration) {
-                    const progress = (audio.currentTime / audio.duration) * 100;
-                    if (progressFill) progressFill.style.width = progress + '%';
-                    if (progressSlider) progressSlider.value = progress;
-                    if (currentTimeDisplay) currentTimeDisplay.textContent = formatTime(audio.currentTime);
-                }
-            });
-
-            // 載入音頻元數據時更新總時長
-            audio.addEventListener('loadedmetadata', function () {
-                if (totalTimeDisplay) totalTimeDisplay.textContent = formatTime(audio.duration);
-            });
-
-            // 進度條拖拽功能
-            if (progressSlider) {
-                progressSlider.addEventListener('input', function () {
-                    if (audio.duration) {
-                        const time = (this.value / 100) * audio.duration;
-                        audio.currentTime = time;
-                    }
-                });
-            }
-
-            // 時間格式化函數
-            function formatTime(seconds) {
-                if (isNaN(seconds)) return '00:00';
-                const mins = Math.floor(seconds / 60);
-                const secs = Math.floor(seconds % 60);
-                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            }
-
-            // 錯誤處理
-            audio.addEventListener('error', function (e) {
-                console.log('音頻載入錯誤:', e);
-                if (playPauseBtn) {
-                    playPauseBtn.disabled = true;
-                    playPauseBtn.innerHTML = '<span style="font-size: 10px;">音頻不可用</span>';
-                }
-            });
         });
     </script>
 </body>
