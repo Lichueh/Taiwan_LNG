@@ -60,32 +60,67 @@
 
         .hero-content {
             position: absolute;
-            top: 50px;
-            left: 50px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 2;
-            text-align: left;
+            text-align: center;
             color: white;
-            max-width: 400px;
+            max-width: 800px;
+            width: 90%;
         }
 
         .hero-title {
-            font-size: 30px;
+            font-size: clamp(24px, 4vw, 42px);
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 1s ease-out 0.5s forwards;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
+            letter-spacing: 0.5px;
         }
 
         .hero-subtitle {
-            font-size: 14px;
-            font-weight: 300;
-            opacity: 0.9;
+            font-size: clamp(14px, 2vw, 18px);
+            font-weight: 400;
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 1s ease-out 0.8s forwards;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            line-height: 1.5;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-byline {
+            font-size: clamp(12px, 1.5vw, 16px);
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 1.1s forwards;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .hero-image-credit {
+            position: absolute;
+            bottom: -40px;
+            right: 0;
+            font-size: clamp(10px, 1.2vw, 12px);
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 8px;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+            z-index: 3;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out 1.4s forwards;
         }
 
         @keyframes fadeInUp {
@@ -298,6 +333,141 @@
             }
         }
 
+        /* === 專家音頻區塊樣式（簡化版） === */
+        .expert-audio-section {
+            margin: 2rem 0;
+        }
+
+        .expert-audio-container {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .expert-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .expert-avatar {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .expert-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-fallback {
+            display: none;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+        }
+
+        .expert-info h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .expert-info p {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .audio-topic {
+            font-size: 0.85rem;
+            color: #3D7878;
+            font-weight: 500;
+        }
+
+        .simple-audio-player {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .play-btn {
+            background: #3D7878;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            background: #2c5f5f;
+            transform: scale(1.05);
+        }
+
+        .progress-area {
+            flex: 1;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            position: relative;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3D7878;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .progress-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
         /* 小屏手機設備特殊優化 */
         @media (max-width: 480px) {
             #asiaLngPriceChart {
@@ -438,18 +608,42 @@
         /* 響應式設計 */
         @media (max-width: 768px) {
             .hero-content {
-                top: 30px;
-                right: 20px;
-                left: 20px;
+                top: 50%;
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, -50%);
                 max-width: none;
+                width: 95%;
                 text-align: center;
+                padding: 0 15px;
             }
 
             .hero-title {
-                font-size: 16px;
+                font-size: clamp(18px, 5vw, 28px);
+                margin-bottom: 1rem;
+                line-height: 1.3;
             }
 
             .hero-subtitle {
+                font-size: clamp(13px, 3vw, 16px);
+                line-height: 1.4;
+                margin: 0 auto;
+            }
+
+            .hero-byline {
+                font-size: clamp(11px, 2.5vw, 14px);
+                margin-top: 1rem;
+            }
+
+            .hero-image-credit {
+                bottom: -30px;
+                right: 0;
+                font-size: clamp(9px, 2vw, 11px);
+                padding: 3px 6px;
+                z-index: 3;
+            }
+
+            .parallax-container {
                 font-size: 12px;
             }
 
@@ -1036,6 +1230,66 @@
             background: #2563EB;
             border-color: #2563EB;
         }
+
+        /* === 音頻播放器響應式設計 === */
+        @media (max-width: 768px) {
+            .expert-profile {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+
+            .audio-controls {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .progress-area {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .expert-audio-container {
+                padding: 1rem;
+                margin: 1rem -10px;
+            }
+
+            .expert-profile {
+                margin-bottom: 1rem;
+                padding-bottom: 0.75rem;
+            }
+
+            .expert-avatar {
+                width: 50px;
+                height: 50px;
+            }
+
+            .expert-info h3 {
+                font-size: 1.1rem;
+            }
+
+            .expert-info p {
+                font-size: 0.85rem;
+            }
+
+            .audio-topic {
+                font-size: 0.8rem;
+            }
+
+            .simple-audio-player {
+                padding: 0.75rem;
+            }
+
+            .play-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .time-info {
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 
@@ -1051,14 +1305,23 @@
         <div class="hero-content">
             <h1 class="hero-title">天然氣撐起台灣發電，<br>但航線及價格韌性備受考驗？</h1>
             <p class="hero-subtitle">南海爭端未解、俄烏戰事持續、卡達海運風險上升。儘管台灣試圖分散航線的地緣政治風險，天然氣供應仍集中於澳洲、美國與卡達。</p>
+            <p class="hero-byline">文｜丁祈、戴悅鈴、黃俐珏</p>
+            <div class="hero-image-credit">封面天然氣接收站圖由AI生成</div>
         </div>
     </section>
+
+    <!-- 圖片版權說明 -->
 
     <!-- 主要內容 -->
     <main class="main-content">
         <div class="container">
             <!-- 概覽區 -->
             <section class="section" id="overview">
+
+                <!-- 影片前導語 -->
+                <div class="section-content fade-in" style="text-align: center;">
+                    <p>在報導開始之前，請先看一段影片，讓我們看看台灣民眾對於國內的能源供給了解程度。</p>
+                </div>
 
                 <!-- 影片容器 -->
                 <div class="video-container fade-in">
@@ -1323,7 +1586,65 @@
                     </p>
                 </div>
 
-            </section>6
+                <!-- 專家音頻訪談區塊 -->
+                <div class="expert-audio-section fade-in">
+                    <div class="expert-audio-container">
+                        <!-- 專家信息 -->
+                        <div class="expert-profile">
+                            <div class="expert-avatar">
+                                <img src="images/expert-avatar.jpg" alt="專家頭像"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="avatar-fallback">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="24" cy="24" r="24" fill="#f0f4f8" />
+                                        <circle cx="24" cy="18" r="8" fill="#3D7878" />
+                                        <path d="M8 42c0-8.8 7.2-16 16-16s16 7.2 16 16" fill="#3D7878" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="expert-info">
+                                <h3>李能源 博士</h3>
+                                <p>台灣能源政策研究中心主任</p>
+                                <span class="audio-topic">深度解析：天然氣供應鏈的挑戰與機會</span>
+                            </div>
+                        </div>
+
+                        <!-- 音頻播放器 -->
+                        <div class="simple-audio-player">
+                            <audio id="expertAudio" preload="metadata">
+                                <source src="audio/expert-interview.mp3" type="audio/mpeg">
+                                <source src="audio/expert-interview.ogg" type="audio/ogg">
+                                您的瀏覽器不支援音頻播放。
+                            </audio>
+
+                            <div class="audio-controls">
+                                <button class="play-btn" id="playPauseBtn">
+                                    <svg class="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M8 5V19L19 12L8 5Z" fill="currentColor" />
+                                    </svg>
+                                    <svg class="pause-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                        style="display: none;">
+                                        <path d="M6 4H10V20H6V4ZM14 4H18V20H14V4Z" fill="currentColor" />
+                                    </svg>
+                                </button>
+
+                                <div class="progress-area">
+                                    <div class="time-info">
+                                        <span class="current-time">00:00</span>
+                                        <span class="total-time">15:30</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill"></div>
+                                        <input type="range" class="progress-slider" min="0" max="100" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
         </div>
     </main>
 
@@ -2964,7 +3285,88 @@
         window.addEventListener('beforeunload', function () {
             d3.selectAll('.lng-tooltip').remove();
         });
-    </script>
+
+        // === 簡化版音頻播放器功能 ===
+        document.addEventListener('DOMContentLoaded', function () {
+            const audio = document.getElementById('expertAudio');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const playIcon = playPauseBtn?.querySelector('.play-icon');
+            const pauseIcon = playPauseBtn?.querySelector('.pause-icon');
+            const progressFill = document.querySelector('.progress-fill');
+            const progressSlider = document.querySelector('.progress-slider');
+            const currentTimeDisplay = document.querySelector('.current-time');
+            const totalTimeDisplay = document.querySelector('.total-time');
+
+            // 如果音頻元素不存在，直接返回
+            if (!audio || !playPauseBtn) return;
+
+            // 播放/暫停功能
+            playPauseBtn.addEventListener('click', function () {
+                if (audio.paused) {
+                    audio.play().catch(e => {
+                        console.log('音頻播放失敗:', e);
+                        alert('音頻文件未找到。請將音頻文件放置在 audio/expert-interview.mp3');
+                    });
+                } else {
+                    audio.pause();
+                }
+            });
+
+            // 更新播放按鈕圖標
+            if (playIcon && pauseIcon) {
+                audio.addEventListener('play', function () {
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'block';
+                });
+
+                audio.addEventListener('pause', function () {
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                });
+            }
+
+            // 更新進度條
+            audio.addEventListener('timeupdate', function () {
+                if (audio.duration) {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    if (progressFill) progressFill.style.width = progress + '%';
+                    if (progressSlider) progressSlider.value = progress;
+                    if (currentTimeDisplay) currentTimeDisplay.textContent = formatTime(audio.currentTime);
+                }
+            });
+
+            // 載入音頻元數據時更新總時長
+            audio.addEventListener('loadedmetadata', function () {
+                if (totalTimeDisplay) totalTimeDisplay.textContent = formatTime(audio.duration);
+            });
+
+            // 進度條拖拽功能
+            if (progressSlider) {
+                progressSlider.addEventListener('input', function () {
+                    if (audio.duration) {
+                        const time = (this.value / 100) * audio.duration;
+                        audio.currentTime = time;
+                    }
+                });
+            }
+
+            // 時間格式化函數
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '00:00';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            // 錯誤處理
+            audio.addEventListener('error', function (e) {
+                console.log('音頻載入錯誤:', e);
+                if (playPauseBtn) {
+                    playPauseBtn.disabled = true;
+                    playPauseBtn.innerHTML = '<span style="font-size: 10px;">音頻不可用</span>';
+                }
+            });
+        });
     </script>
 </body>
 
