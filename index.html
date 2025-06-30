@@ -1,0 +1,2358 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天然氣撐起台灣發電，但航線及價格韌性備受考驗？</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="lng_data2.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fafafa;
+            overflow-x: hidden;
+            /* 防止圖片載入時的閃白 */
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 視差滾動容器 */
+        .parallax-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('images/titile_background_picture.png');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background: rgba(0, 0, 0, 0.3);
+            transform: translateY(0);
+            transition: transform 0.1s ease-out;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            z-index: 2;
+            text-align: left;
+            color: white;
+            max-width: 400px;
+        }
+
+        .hero-title {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            font-weight: 300;
+            opacity: 0.9;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.8s forwards;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 主要內容區域 */
+        .main-content {
+            position: relative;
+            background: white;
+            margin-top: -50px;
+            border-radius: 20px 20px 0 0;
+            padding: 60px 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #2d3748;
+            text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a5568;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 圖表容器 */
+        .chart-container {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* LNG 圖表專用樣式 */
+        .lng-chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        /* LNG 價格圖表專用樣式 */
+        .lng-price-chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .chart-type-selector {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .chart-type-selector button {
+            background: #3D7878;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 16px;
+        }
+
+        .chart-type-selector button:hover {
+            background: #4F9D9D;
+        }
+
+        .chart-type-selector button.active {
+            background: #95CACA;
+            color: #3C3C3C;
+        }
+
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3D7878;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* D3.js 亞洲LNG價格圖表樣式 */
+        #asiaLngPriceChart .axis {
+            font-size: 12px;
+        }
+
+        #asiaLngPriceChart .axis path,
+        #asiaLngPriceChart .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        #asiaLngPriceChart .grid line {
+            stroke: lightgrey;
+            stroke-opacity: 0.7;
+            shape-rendering: crispEdges;
+        }
+
+        #asiaLngPriceChart .grid path {
+            stroke-width: 0;
+        }
+
+        #asiaLngPriceChart .line {
+            fill: none;
+            stroke: #3D7878;
+            stroke-width: 2px;
+        }
+
+        #asiaLngPriceChart .area {
+            fill: #95CACA;
+            fill-opacity: 0.3;
+        }
+
+        #asiaLngPriceChart .dot {
+            fill: #3D7878;
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+
+        #asiaLngPriceChart .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 20;
+        }
+
+        /* 響應式圖表容器 */
+        #asiaLngPriceChart {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        #asiaLngPriceChart svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 移動設備優化 */
+        @media (max-width: 768px) {
+            .chart-container {
+                padding: 15px;
+                margin: 20px 0;
+            }
+        }
+
+        /* 平板設備優化 */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .chart-container {
+                padding: 18px;
+            }
+        }
+
+
+        /* 影片容器 */
+        .video-container {
+            margin: 40px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            /* 16:9 比例 */
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* YouTube 影片嵌入樣式 */
+        .youtube-video {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            /* 16:9 比例 */
+        }
+
+        .youtube-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 15px;
+        }
+
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .chart-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            margin: 0 auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 動態地圖 */
+        .map-container {
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            margin: 40px 0;
+        }
+
+        #worldMap {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* 數據卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: #333f50;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.6s ease-out;
+        }
+
+        .stat-card.visible {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .hero-content {
+                top: 30px;
+                right: 20px;
+                left: 20px;
+                max-width: none;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 16px;
+            }
+
+            .hero-subtitle {
+                font-size: 12px;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 50px);
+                margin-left: 50px !important;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                margin-top: -30px;
+                padding: 40px 0;
+            }
+        }
+
+        /* 滾動指示器 */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1000;
+        }
+
+        .scroll-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* 動畫類 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 滾動觸發動畫容器 */
+        .scroll-animation-container {
+            position: relative;
+            height: calc(100vh * 4);
+            /* 增加高度让切换更慢 */
+            margin: 80px 0;
+            background: #f7fafc;
+            /* 容器背景，防止閃白 */
+        }
+
+        .scroll-animation-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .scroll-animation-item.active {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        /* 確保圖片背景不會閃白 */
+        .scroll-animation-content {
+            position: sticky;
+            top: 5vh;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 90%;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f7fafc;
+            /* 設置淺灰背景避免閃白 */
+            border-radius: 15px;
+            flex-direction: column;
+            /* 允許垂直排列 */
+        }
+
+        .scroll-animation-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #f7fafc;
+            /* 圖片容器背景 */
+            border-radius: 15px;
+        }
+
+        .scroll-animation-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* 保持比例，完整顯示圖片 */
+            border-radius: 15px;
+        }
+
+        .scroll-animation-text {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.5);
+            /* 透明度改為50% */
+            padding: clamp(15px, 3vw, 24px);
+            border-radius: clamp(8px, 2vw, 15px);
+            max-width: clamp(280px, 40vw, 400px);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(clamp(6px, 1.5vw, 12px));
+            margin-left: auto;
+            /* 默認向右偏移 */
+            margin-right: clamp(20px, 4vw, 60px);
+            /* 距離右邊保持一些距離 */
+            font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+            line-height: clamp(1.4, 0.3vw + 1.3, 1.6);
+            /* 添加自適應邊框 */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            /* 添加內部發光效果 */
+            box-shadow: 0 clamp(4px, 1vw, 8px) clamp(15px, 3vw, 25px) rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        /* 第一張圖片 - 居中 */
+        .scroll-animation-item[data-index="0"] .scroll-animation-text {
+            align-self: center;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: clamp(-200px, -15vw, -100px);
+            text-align: center;
+        }
+
+        /* 第二張圖片 - 左上角（與第四個相同高度）*/
+        .scroll-animation-item[data-index="1"] .scroll-animation-text {
+            align-self: flex-start;
+            margin-left: auto;
+            margin-right: clamp(30px, 5vw, 80px);
+            margin-top: clamp(-200px, -20vw, -400px);
+        }
+
+        /* 第三張圖片 - 右下角 */
+        .scroll-animation-item[data-index="2"] .scroll-animation-text {
+            align-self: flex-end;
+            margin-left: auto;
+            margin-right: clamp(30px, 5vw, 80px);
+            margin-bottom: clamp(20px, 3vw, 50px);
+        }
+
+        /* 第四張圖片 - 左上角 */
+        .scroll-animation-item[data-index="3"] .scroll-animation-text {
+            align-self: flex-start;
+            margin-left: clamp(20px, 4vw, 60px);
+            margin-right: auto;
+            margin-top: clamp(-200px, -20vw, -400px);
+        }
+
+        /* 第五張圖片 - 中央偏右 */
+        .scroll-animation-item[data-index="4"] .scroll-animation-text {
+            align-self: flex-start;
+            margin-left: auto;
+            margin-right: clamp(30px, 5vw, 80px);
+            margin-top: clamp(60px, 8vw, 150px);
+        }
+
+        .scroll-animation-item.active .scroll-animation-text {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 1;
+            /* 其他圖片的延遲時間 */
+        }
+
+        /* 第一張圖片的文字只在圖片準備好後才顯示 */
+        .scroll-animation-item[data-index="0"].active .scroll-animation-text {
+            opacity: 0;
+            /* 預設隱藏 */
+            transform: translateY(50px);
+            transition-delay: 0s;
+            /* 移除延遲，由image-ready控制 */
+        }
+
+        /* 第一張圖片到位後才顯示文字 */
+        .scroll-animation-item[data-index="0"].active.image-ready .scroll-animation-text {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 1ms;
+            /* 圖片到位後1毫秒才顯示文字，給用戶更多時間觀看圖片 */
+        }
+
+        .scroll-animation-title {
+            font-size: clamp(0.7rem, 1.8vw, 1.1rem);
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: clamp(0.5rem, 1.5vw, 1.2rem);
+            line-height: 1.3;
+        }
+
+        /* 第一個項目標題居中 */
+        .scroll-animation-item[data-index="0"] .scroll-animation-title {
+            text-align: center;
+        }
+
+        .scroll-animation-description {
+            font-size: clamp(0.75rem, 1.8vw, 1rem);
+            line-height: clamp(1.4, 0.2vw + 1.3, 1.7);
+            color: #4a5568;
+        }
+
+        /* 響應式設計 - 優化版本 */
+        @media (max-width: 768px) {
+            .scroll-animation-content {
+                width: 95%;
+                height: 85vh;
+                top: 7.5vh;
+            }
+
+            .scroll-animation-image img {
+                object-fit: contain;
+                /* 手機版也保持比例 */
+            }
+
+            /* 手機版透明框響應式調整 - 更精細的尺寸控制 */
+            .scroll-animation-text {
+                max-width: clamp(230px, 80vw, 280px) !important;
+                min-width: clamp(180px, 65vw, 230px) !important;
+                padding: clamp(12px, 3.5vw, 16px) !important;
+                border-radius: clamp(6px, 1.8vw, 10px) !important;
+                margin-left: clamp(8px, 2.5vw, 15px) !important;
+                margin-right: clamp(8px, 2.5vw, 15px) !important;
+                backdrop-filter: blur(clamp(5px, 1.2vw, 8px)) !important;
+                /* 增加陰影和邊框以提升可讀性 */
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
+                    0 2px 8px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            }
+
+            /* 手機版文字大小調整 - 改善可讀性 */
+            .scroll-animation-title {
+                font-size: clamp(0.9rem, 4vw, 1.1rem) !important;
+                margin-bottom: clamp(0.4rem, 2vw, 0.7rem) !important;
+                font-weight: 600 !important;
+                line-height: 1.3 !important;
+                /* 增加文字陰影提升對比度 */
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+            }
+
+            .scroll-animation-description {
+                font-size: clamp(0.5rem, 2.2vw, 0.7rem) !important;
+                line-height: clamp(1.4, 0.3vw + 1.3, 1.6) !important;
+                /* 增加文字陰影提升對比度 */
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+            }
+
+            /* 手機版位置調整 - 更精確的定位 */
+            .scroll-animation-item[data-index="0"] .scroll-animation-text {
+                align-self: center !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                margin-top: clamp(-120px, -12vw, -60px) !important;
+                margin-bottom: clamp(20px, 4vw, 30px) !important;
+            }
+
+            .scroll-animation-item[data-index="1"] .scroll-animation-text {
+                align-self: flex-start !important;
+                margin-left: auto !important;
+                margin-right: clamp(30px, 5vw, 80px) !important;
+                margin-top: clamp(-220px, -22vw, -160px) !important;
+            }
+
+            .scroll-animation-item[data-index="2"] .scroll-animation-text,
+            .scroll-animation-item[data-index="4"] .scroll-animation-text {
+                align-self: flex-end !important;
+                margin-bottom: clamp(20px, 4vw, 30px) !important;
+                margin-top: auto !important;
+            }
+
+            .scroll-animation-item[data-index="3"] .scroll-animation-text {
+                align-self: flex-start !important;
+                margin-left: clamp(15px, 4vw, 30px) !important;
+                margin-right: auto !important;
+                margin-top: clamp(-400px, -40vw, -380px) !important;
+            }
+
+            /* 超小屏幕優化 (320px - 480px) */
+            @media (max-width: 480px) {
+                .scroll-animation-text {
+                    max-width: 90vw !important;
+                    min-width: 250px !important;
+                    padding: clamp(10px, 3vw, 14px) !important;
+                    margin-left: 2.5vw !important;
+                    margin-right: 2.5vw !important;
+                }
+
+                .scroll-animation-title {
+                    font-size: clamp(0.6rem, 2.4vw, 0.8rem) !important;
+                    margin-bottom: clamp(0.3rem, 2vw, 0.6rem) !important;
+                }
+
+                .scroll-animation-description {
+                    font-size: clamp(0.5rem, 2.2vw, 0.7rem) !important;
+                    line-height: clamp(1.35, 0.2vw + 1.3, 1.5) !important;
+                }
+
+                /* 超小屏幕下的特殊位置調整 */
+                .scroll-animation-item[data-index="0"] .scroll-animation-text {
+                    margin-top: clamp(-100px, -10vw, -50px) !important;
+                    margin-bottom: clamp(15px, 3vw, 25px) !important;
+                }
+
+                .scroll-animation-item[data-index="3"] .scroll-animation-text {
+                    margin-left: 2.5vw !important;
+                    margin-top: clamp(-280px, -28vw, -240px) !important;
+                }
+            }
+        }
+
+        /* 平板響應式設計 (769px - 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .scroll-animation-text {
+                max-width: clamp(280px, 40vw, 340px) !important;
+                min-width: clamp(250px, 30vw, 280px) !important;
+                padding: clamp(14px, 2.2vw, 20px) !important;
+                border-radius: clamp(8px, 1.3vw, 12px) !important;
+                /* 增加平板版的視覺效果 */
+                box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12),
+                    0 3px 10px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                backdrop-filter: blur(clamp(6px, 1.2vw, 10px)) !important;
+            }
+
+            .scroll-animation-title {
+                font-size: clamp(0.8rem, 1.8vw, 1rem) !important;
+                margin-bottom: clamp(0.5rem, 1vw, 0.8rem) !important;
+                line-height: 1.35 !important;
+                font-weight: 600 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+            }
+
+            .scroll-animation-description {
+                font-size: clamp(0.75rem, 1.4vw, 0.9rem) !important;
+                line-height: clamp(1.5, 0.2vw + 1.4, 1.7) !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+            }
+
+            /* 平板版的位置微調 */
+            .scroll-animation-item[data-index="0"] .scroll-animation-text {
+                margin-top: clamp(-80px, -8vw, -50px) !important;
+                margin-bottom: clamp(25px, 3vw, 35px) !important;
+            }
+
+            .scroll-animation-item[data-index="1"] .scroll-animation-text {
+                align-self: flex-start !important;
+                margin-right: clamp(30px, 5vw, 80px) !important;
+                margin-top: clamp(-60px, -6vw, -30px) !important;
+            }
+
+            .scroll-animation-item[data-index="2"] .scroll-animation-text,
+            .scroll-animation-item[data-index="4"] .scroll-animation-text {
+                margin-bottom: clamp(25px, 3vw, 35px) !important;
+            }
+
+            .scroll-animation-item[data-index="3"] .scroll-animation-text {
+                margin-top: clamp(-260px, -26vw, -230px) !important;
+            }
+        }
+
+        /* 桌面版增強效果 (1025px+) */
+        @media (min-width: 1025px) {
+            .scroll-animation-text {
+                max-width: clamp(300px, 35vw, 380px) !important;
+                min-width: clamp(280px, 25vw, 300px) !important;
+                padding: clamp(16px, 2vw, 22px) !important;
+                border-radius: clamp(10px, 1.3vw, 14px) !important;
+                transition: all 0.6s ease-out, transform 0.3s ease-out !important;
+                backdrop-filter: blur(clamp(8px, 1vw, 12px)) !important;
+                /* 桌面版基础样式 */
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12),
+                    0 4px 12px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+                border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            }
+
+            .scroll-animation-text:hover {
+                transform: translateY(-6px) scale(1.015) !important;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18),
+                    0 6px 15px rgba(0, 0, 0, 0.12),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+                background: rgba(255, 255, 255, 0.7) !important;
+                backdrop-filter: blur(15px) !important;
+                border-color: rgba(255, 255, 255, 0.6) !important;
+            }
+
+            .scroll-animation-title {
+                font-size: clamp(1rem, 1.3vw, 1.3rem) !important;
+                margin-bottom: clamp(0.6rem, 0.8vw, 1rem) !important;
+                line-height: 1.4 !important;
+                font-weight: 600 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+            }
+
+            .scroll-animation-description {
+                font-size: clamp(0.85rem, 1.1vw, 1rem) !important;
+                line-height: clamp(1.6, 0.1vw + 1.5, 1.8) !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+            }
+
+            /* 桌面版位置微調 */
+            .scroll-animation-item[data-index="0"] .scroll-animation-text {
+                margin-top: clamp(-70px, -6vw, -40px) !important;
+                margin-bottom: clamp(30px, 3vw, 40px) !important;
+            }
+
+            .scroll-animation-item[data-index="1"] .scroll-animation-text {
+                align-self: flex-start !important;
+                margin-right: clamp(30px, 5vw, 80px) !important;
+                margin-top: clamp(-80px, -8vw, -50px) !important;
+            }
+
+            .scroll-animation-item[data-index="2"] .scroll-animation-text,
+            .scroll-animation-item[data-index="4"] .scroll-animation-text {
+                margin-bottom: clamp(30px, 3vw, 40px) !important;
+            }
+
+            .scroll-animation-item[data-index="3"] .scroll-animation-text {
+                margin-top: clamp(-280px, -28vw, -250px) !important;
+            }
+        }
+
+        /* 大屏幕優化 (1400px+) */
+        @media (min-width: 1400px) {
+            .scroll-animation-text {
+                max-width: clamp(340px, 32vw, 420px) !important;
+                min-width: clamp(320px, 28vw, 340px) !important;
+                padding: clamp(18px, 2.2vw, 26px) !important;
+                border-radius: clamp(12px, 1.4vw, 16px) !important;
+                /* 大屏幕特殊效果 */
+                box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1),
+                    0 5px 15px rgba(0, 0, 0, 0.06),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+            }
+
+            .scroll-animation-text:hover {
+                transform: translateY(-8px) scale(1.02) !important;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15),
+                    0 8px 20px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+            }
+
+            .scroll-animation-title {
+                font-size: clamp(1.1rem, 1.4vw, 1.5rem) !important;
+                margin-bottom: clamp(0.8rem, 1vw, 1.2rem) !important;
+                line-height: 1.35 !important;
+                font-weight: 600 !important;
+            }
+
+            .scroll-animation-description {
+                font-size: clamp(0.9rem, 1.1vw, 1.2rem) !important;
+                line-height: clamp(1.65, 0.15vw + 1.6, 1.85) !important;
+            }
+
+            /* 大屏幕位置優化 */
+            .scroll-animation-item[data-index="0"] .scroll-animation-text {
+                margin-top: clamp(-80px, -6vw, -50px) !important;
+                margin-bottom: clamp(40px, 4vw, 50px) !important;
+            }
+        }
+
+        /* 超寬屏幕優化 (1920px+) */
+        @media (min-width: 1920px) {
+            .scroll-animation-text {
+                max-width: clamp(380px, 30vw, 480px) !important;
+                padding: clamp(22px, 2.3vw, 32px) !important;
+                border-radius: clamp(14px, 1.6vw, 20px) !important;
+            }
+
+            .scroll-animation-title {
+                font-size: clamp(1.5rem, 1.7vw, 2rem) !important;
+                margin-bottom: clamp(1rem, 1.2vw, 1.4rem) !important;
+            }
+
+            .scroll-animation-description {
+                font-size: clamp(1rem, 1.2vw, 1.4rem) !important;
+                line-height: clamp(1.7, 0.2vw + 1.6, 1.9) !important;
+            }
+        }
+
+        /* 通用的透明框動畫優化 */
+        .scroll-animation-text {
+            /* 確保所有尺寸下的平滑過渡 */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s ease-out !important;
+            will-change: transform, opacity !important;
+            /* 防止文字選擇影響交互 */
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+
+        /* 確保文字可讀性 */
+        .scroll-animation-title,
+        .scroll-animation-description {
+            /* 重新啟用文字選擇 */
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+
+        /* 亞洲LNG圖表按鈕樣式 */
+        .btn-chart {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-chart:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .btn-chart.active {
+            background: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+
+        .btn-chart.active:hover {
+            background: #2563EB;
+            border-color: #2563EB;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 滾動指示器 -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+
+    <!-- 視差滾動英雄區 -->
+    <section class="parallax-container" id="hero">
+        <div class="parallax-bg" id="parallaxBg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">天然氣撐起台灣發電，<br>但航線及價格韌性備受考驗？</h1>
+            <p class="hero-subtitle">南海爭端未解、俄烏戰事持續、卡達海運風險上升。儘管台灣試圖分散航線的地緣政治風險，天然氣供應仍集中於澳洲、美國與卡達。</p>
+        </div>
+    </section>
+
+    <!-- 主要內容 -->
+    <main class="main-content">
+        <div class="container">
+            <!-- 概覽區 -->
+            <section class="section" id="overview">
+
+                <!-- 影片容器 -->
+                <div class="video-container fade-in">
+                    <iframe src="https://www.youtube.com/embed/5ga7k-MJL_E" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <h2 class="section-title fade-in">2026天然氣價格預計走低，<br>但供應鏈的不穩定依然威脅台灣能源安全</h2>
+
+
+                <div class="section-content fade-in">
+                    <p>根據聯合國下組織「政府間氣候變化專門委員會」指出，為了把全球暖化限制在1.5°C以內，全球需要在2050年前達到淨零排放，對此世界已有130多國提出「2050淨零排放」的宣示與行動。雖然台灣並非聯合國會員，沒有被明文要求，但作為一個海島國家，台灣本就面臨更高的氣候風險。此外，由於許多重要貿易國如美國、歐盟、日本等已明確設定
+                        2050 淨零，為了確保供應鏈穩定與市場競爭力，台灣必須跟上國際低碳轉型步伐。<br><br></p>
+                    <p>2025隨著核三廠停機，台灣正式邁入「非核家園」時代，為了達成2022年行政院宣布的2050淨零目標。賴政府也在今年公布的「國家減碳新目標」草案中，提出了相較於 2005 年基準年，台灣在
+                        2032 年減碳 32±2%、2035 年減碳 38±2% 的目標。作為因應，經濟部預估天然氣在台灣的發電占比，預計從 2024 年的 47%，提高到 2032 年和 2035 年的
+                        54%，綠能則目標2032到達31%，2035到達36%，進一步壓縮煤炭發電的占比，以天然氣持續作為台灣發展綠電的過度能源，降低煤炭發電所造成的高碳排和空氣汙染問題。</p>
+                </div>
+
+                <!-- 統計卡片 -->
+                <div class="stats-grid">
+                    <div class="stat-card" data-number="0" data-target="47" data-unit="%">
+                        <div class="stat-number">47%</div>
+                        <div class="stat-label">2024年天然氣發電占比</div>
+                    </div>
+                    <div class="stat-card" data-number="0" data-target="73" data-unit="%">
+                        <div class="stat-number">73%</div>
+                        <div class="stat-label">2024年三大供應國占比</div>
+                    </div>
+                    <div class="stat-card" data-number="0" data-target="691" data-unit="億">
+                        <div class="stat-number">691億</div>
+                        <div class="stat-label">2024年中油虧損</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 數據視覺化區 -->
+            <section class="section" id="data">
+                <h3 class="section-title slide-in-left">三國掌握七成供應，台灣天然氣來源集中化加劇</h3>
+                <div class="chart-container slide-in-right">
+                    <h3 class="chart-title">台灣2000~2024各能源發電量占比變化</h3>
+                    <img src="images/image1.png" alt="發電量占比變化圖" class="chart-image">
+                    <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">資料來源：台灣電力公司</p>
+                </div>
+
+                <div class="section-content slide-in-left">
+                    <p>根據 2016 年蔡政府能源轉型白皮書草案，明確提出「2025 年再生能源占比 20%、燃氣發電 50%、燃煤降到 30%
+                        以下」的能源目標。雖然最終並未達標，但從數據仍可看出2016後往綠能轉型的趨勢。<br><br>
+                        接下來數十年，天然氣都將持續扮演台灣能源轉型的關鍵角色，因此天然氣價格對於台灣的電價至關重要，所幸，根據美國四大會計師事務所之一的德勤（Deloitte）預計2025~2026亞洲JKM價格（Japan
+                        Korea Marker，反映亞洲地區，液化天然氣買賣的現貨價格，是台灣買家天然氣價格的重要指標。)：約 13~15美元/MMBtu（Million British Thermal
+                        Units，百萬英熱單位，天然氣發熱量的單位），但到了2026以後，隨著美國、卡達液化天然氣（Liquefied Natural Gas,
+                        LNG）新產能上線、中國、印度等主要進口國經濟成長減緩，天然氣價格預期逐步下滑，亞洲價格降至 12~13 美元/MMBtu。因此，雖然2025
+                        年全球天然氣受到俄羅斯管道供應減少以及歐洲與北美冬季特別寒冷導致的需求增加，但長期來看，天然氣的價格將逐漸下降，對於天然氣需求逐年攀升的台灣是不錯的消息。<br><br>
+                        國際能源總署(International Energy Agency，簡稱IEA)在《2024世界能源展望》也提到 2030
+                        年天然氣需求達到峰值後就會開始下降，可見長期來看台灣有望用更低的價格購氣。然而報告也提到，由於地緣衝突不斷，現在的國際供應鏈還是很脆弱。可見不論是國際產氣大國間的政治角力，或是重要航道因為戰爭中斷，都可能進一步推高天然氣價格。對此，本新聞將透過數據深入探討台灣面臨的天然氣價格風險。回答台灣天然氣歷年來選擇的進口國發生什麼變化？每個進口國的簽約種類以及簽約價格有沒有不同？歷年發生戰爭和天災時，台灣購氣價格產生哪些影響？讓讀者了解進口天然氣背後有哪些風險，又該採取哪些策略面對挑戰。
+                    </p>
+                </div>
+
+                <div class="chart-container slide-in-right">
+                    <h3 class="chart-title">台灣2006-2024液化天然氣供應國之進口量占比</h3>
+                    <img src="images/image5.png" alt="LNG進口量占比圖" class="chart-image">
+                    <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">資料來源：經濟部能源署</p>
+                </div>
+
+                <div class="section-content slide-in-left">
+                    <p>從圖表二可看出，台灣液化天然氣（LNG）進口結構在過去十多年出現顯著變化。根據經濟部能源署統計，2006 年至 2014 年，台灣進口
+                        LNG多來自東南亞鄰近國家，如馬來西亞與印尼，呈現「區域集中但來源分散」的格局。<br><br>
+                        然而自 2015 年起，澳洲供氣快速增長，至 2024 年占比已接近四成，坐上台灣最大供應國地位；同時，美國自 2019 年起穩定供應，2024
+                        年占比達10%，超越馬來西亞與印尼，成為第三大來源。卡達則持續穩定供應約四分之一。至 2024 年，這三個國家合計已占台灣 LNG 進口量逾七成，顯示出「來源國集中化」的趨勢。<br><br>
+                        2018 年曾被視為進口來源最為分散的時期，《能源報導》亦指出，當年台灣 LNG 進口風險指數創下
+                        2000年以來新低。但隨後數年，來源逐漸集中於少數國家，雖可能有助於控制價格波動，卻也帶來「一國出事、全盤受衝擊」的潛在風險。
+                    </p>
+                </div>
+
+
+
+            </section>
+
+            <!-- 動態地圖區 -->
+            <section class="section" id="map">
+                <h2 class="section-title slide-in-left">洲別多元帶動航線多元，<br>台灣開拓能源避險新路徑</h2>
+                <div class="section-content slide-in-left">
+                    <p>從圖表三的世界地圖來看，台灣目前LNG進口來源已遍及亞洲、中東、大洋洲與北美洲，與早期主要仰賴亞洲區域相比，逐步轉向「洲際多元化」的布局。這樣的轉變雖未擴大來源國數量，但有效拓展了天然氣航線的選擇空間與策略彈性。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 滾動觸發動畫區 -->
+            <section class="scroll-animation-container" id="scrollAnimation">
+                <div class="scroll-animation-item" data-index="0">
+                    <div class="scroll-animation-content">
+                        <div class="scroll-animation-image">
+                            <img src="images/route1.png" alt="天然氣供應路線圖1">
+                        </div>
+                        <div class="scroll-animation-text">
+                            <h3 class="scroll-animation-title">台灣天然氣進口國航線圖</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scroll-animation-item" data-index="1">
+                    <div class="scroll-animation-content">
+                        <div class="scroll-animation-image">
+                            <img src="images/route2.png" alt="天然氣供應路線圖2">
+                        </div>
+                        <div class="scroll-animation-text">
+                            <h3 class="scroll-animation-title">台灣2024年LNG第一大進口國：澳洲</h3>
+                            <p class="scroll-animation-description">
+                                澳洲的航線主要經由南海海域，最終抵達台灣西南邊的天然氣接收站，路段涉及地緣政治敏感區域。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scroll-animation-item" data-index="2">
+                    <div class="scroll-animation-content">
+                        <div class="scroll-animation-image">
+                            <img src="images/route3.png" alt="天然氣供應路線圖3">
+                        </div>
+                        <div class="scroll-animation-text">
+                            <h3 class="scroll-animation-title">台灣2024年LNG第二大進口國：卡達</h3>
+                            <p class="scroll-animation-description">
+                                卡達的LNG船由荷莫茲海峽出發，途經麻六甲海峽與南海後抵達台灣，航線橫跨中東與南亞的戰略熱點，地緣政治風險相對較高，潛在影響供應穩定性。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scroll-animation-item" data-index="3">
+                    <div class="scroll-animation-content">
+                        <div class="scroll-animation-image">
+                            <img src="images/route4.png" alt="天然氣供應路線圖4">
+                        </div>
+                        <div class="scroll-animation-text">
+                            <h3 class="scroll-animation-title">台灣2024年LNG第三大進口國：美國</h3>
+                            <p class="scroll-animation-description">
+                                美國的航線橫越太平洋直達台灣，雖然運輸距離較遠、時間較長，但整體航程避開高風險區域，相對而言具有較高的供應安全性。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scroll-animation-item" data-index="4">
+                    <div class="scroll-animation-content">
+                        <div class="scroll-animation-image">
+                            <img src="images/route5.png" alt="天然氣供應路線圖5">
+                        </div>
+                        <div class="scroll-animation-text">
+                            <h3 class="scroll-animation-title">台灣LNG進口國：俄羅斯</h3>
+                            <p class="scroll-animation-description">
+                                自2022年俄烏戰爭爆發後，台灣降低對俄羅斯的LNG依賴，至2024年，來自俄羅斯的進口量僅佔總量約2%。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 新增正文區塊 -->
+            <section class="section" id="analysis">
+                <h2 class="section-title fade-in">天然氣價格風險與供應鏈挑戰</h2>
+
+                <div class="section-content fade-in">
+                    <p>不過，若從來源國的地理分布（洲別）觀察，則呈現出另一種趨勢。從圖表三的世界地圖來看，台灣目前 LNG
+                        進口來源已遍及亞洲、中東、大洋洲與北美洲，與早期主要仰賴亞洲區域相比，逐步轉向「洲別多元化」的佈局。這樣的轉變雖未擴大來源國數量，卻有效拓展了天然氣航線的選擇空間與策略彈性。<br><br>
+                        根據能源署 2019 年報告，台灣 LNG
+                        共有四大進口航線，其中僅西南航線需穿越具潛在軍事風險的南海，其餘三條則相對安全。過去多數供應來自卡達、馬來西亞、印尼，運輸路徑多經南海進入台灣西部接收站；但隨著美國與阿拉斯加等北美供應比重上升，台灣得以透過北太平洋航線進口
+                        LNG，有效避開南海路徑，降低航運風險。<br><br>
+                        整體而言，雖仍有部分天然氣來自需經南海的供應國，但不需經南海的來源（如美國、阿拉斯加）占比持續上升。根據 2025
+                        年中央社報導，為回應美方關切貿易不平衡，經濟部長郭智輝表示，台灣未來將擴大自美國採購天然氣，目標占比達 2 至 3 成，有助於進一步強化航線分散化的布局。<br><br>
+                        因此，即使台灣 LNG 來源國集中度上升，「洲別多元化所帶來的航線多元化」，仍成為降低地緣風險的重要戰略補償。2025 年 3 月，中油與阿拉斯加天然氣公司簽署合作備忘錄，預計自 2029
+                        年起，每年供應 360 萬噸 LNG，進一步穩固北美航線的能源戰略地位。<br><br>
+                        總結而言，台灣天然氣進口結構正從「鄰近區域、來源分散」轉型為「來源集中、洲別多元」的複合型態。雖然這樣的布局有助於分散運輸風險、強化供應穩定性，但在實際成本上，天然氣價格仍高度敏感於國際市場變化，特別是短期波動與地緣政治衝擊。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 新增正文區塊 -->
+            <section class="section" id="analysis">
+                <h2 class="section-title fade-in">天然氣進口價格波動，現貨價受市場影響劇烈</h2>
+
+                <div class="section-content fade-in">
+                    <p>台灣的天然氣採購方案分為兩種——契約期間1年以上的中長約和1年以下的現貨採購。目前作為發電主力的前三大天然氣進口來源，澳洲、卡達和美國皆是中長期合約佔比較多，價格波動較小，能夠維持基礎發電量。進口國如印尼、馬來西亞，則是在106和109年合約期滿後轉以現貨為主，作為天然氣進口多元化的補充來源。<br><br>
+                        在價格部分，天然氣現貨採購價格受國際市場波動影響，其價格的變化與地緣政治、運輸風險、氣候因素、市場競爭和出口國能源政策調整息息相關。</p>
+                </div>
+
+                <div class="chart-container fade-in">
+                    <div class="info-box">
+                        <strong>圖表說明：</strong>此圖表顯示2012-2022年各國LNG進口平均單價的趨勢變化，可切換現貨與長約數據。
+                    </div>
+
+                    <h3 class="chart-title">各國每年進口平均單價</h3>
+                    <div class="chart-type-selector">
+                        <button class="active" onclick="switchPriceChart('現貨')">現貨</button>
+                        <button onclick="switchPriceChart('長約')">長約</button>
+                    </div>
+                    <div class="lng-price-chart-wrapper">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                        資料來源：2014-2023年度台灣中油股份有限公司營業預算評估報告<br><br>（2014年為中油公司的模擬數據，2022年為1月-8月數據）</p>
+                </div>
+
+                <div class="section-content fade-in">
+                    <p>根據中油的天然氣進口來源及數量統計，中長期約和現貨價格在101至108年呈現一致的走勢。其中價格波動劇烈的時間點有三個。首先107年2 月至 3 月巴布亞紐幾內亞發生地震，距震央約 600
+                        公里的LNG廠被迫停擺，直至 4 月 16 日恢復營運，波及亞洲 LNG 現貨價格上揚。到了民國109年，隨著國際天然氣市場眾多 LNG 出口計畫陸續啟用，澳洲、美國及俄羅斯等國帶動全球
+                        LNG出口產能，國際市場供過於求。於市場供應過剩之情境下，天然氣現貨價格下跌，並出現低於中長約之狀況。因此，現貨的靈活性為市場買家帶來更多可操作空間，台灣也轉向提高現貨進口。然而111年俄烏戰爭爆發，天然氣價格受到衝擊，通過計算台灣歷年天然氣進口平均單價，我們發現在民國109年至111年，2年間，天然氣的中長約價格增加一倍，現貨價格變成原本的近
+                        8 倍。地緣政治和戰爭對於天然氣價格的影響由此體現。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 新增正文區塊 -->
+            <section class="section" id="analysis">
+                <h2 class="section-title fade-in">電價凍漲，中油台電虧本賣氣和電</h2>
+
+                <div class="section-content fade-in">
+                    <p>面對天然氣價格的暴漲，國內天然氣牌價則沒有過度的調漲，探究其原因，是中油在背後默默吸收成本。截止2025年1月18日，
+                        受油氣吸收政策拖累，中油2024年營收1.1兆元，累積虧損691億，財務狀況堪憂。在2023年做客寶島聯播網時，當時的中油董事長李順欽也曾表示「我給電業（用戶）打8折多，我對民生工業打四折在賣」。
+                    </p>
+                </div>
+
+                <div class="chart-container fade-in">
+                    <div class="info-box">
+                        <strong>圖表說明：</strong>此圖表顯示2012-2022年各國LNG進口總金額的堆疊柱狀圖，可切換現貨與長約數據。
+                    </div>
+
+                    <h3 class="chart-title">各國每年進口總金額</h3>
+                    <div class="chart-type-selector">
+                        <button class="active" onclick="switchChart('現貨')">現貨</button>
+                        <button onclick="switchChart('長約')">長約</button>
+                    </div>
+                    <div class="lng-chart-wrapper">
+                        <canvas id="amountChart"></canvas>
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                        資料來源：2014-2023年度台灣中油股份有限公司營業預算評估報告<br><br>（2014年為中油公司的模擬數據，2022年為1月-8月數據）</p>
+                </div>
+
+                <div class="section-content fade-in">
+                    <p>但整體而言，受俄烏戰爭、全球能源價格波動，台灣2025年發電成本已經較原本預估的3.2–3.4 元/kWh，調漲至 3.9 元。且 2022 年起，開始減少對台積電等工業大戶的補貼，電價調幅達
+                        50%，而民生僅調 7%。台灣環境規劃協會理事長趙家緯表示，過去台積電用電比住家還便宜，現在結構已調整為「民生負擔較低，企業承擔較多」。
+                        至於未來中油還要不要虧本吸收成本？台電究竟該不該漲價？目前政府的回答是「考量國際關稅變化與地緣政治風險，為照顧民生、穩定物價，2025年上半年電價不漲不降」。
+                    </p>
+                </div>
+
+                <div class="section-content fade-in">
+                    <p>而從天然氣在亞洲市場的走勢來看，隨著需求疲軟、替代燃料價格更低，和持續的貿易緊張影響，亞洲液化天然氣（LNG）價格在2023年後逐漸下跌，並於2025年4月29日跌至約一年來最低，也促進中油買進一批6月交貨的LNG。但是隨時歐洲的嚴冬、俄羅斯産天然氣的流入減少，中美貿易戰、美國天然氣價格攀升等影響，亞洲市場價格可能會受到聯動影響，從而在台灣能源轉型的背景下，導致發電成本上升和電價持續上漲。
+                    </p>
+                </div>
+
+                <div class="chart-container fade-in">
+                    <h3 class="chart-title">亞洲LNG價格走勢圖 (2012-2024)</h3>
+                    <div id="asiaLngPriceChart"
+                        style="width: 100%; height: 420px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; position: relative;">
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                        資料來源：Investing.com </p>
+                </div>
+
+                <div class="section-content fade-in">
+                    <p>最後，為了因應台灣「非核家園」時代，和2050淨零目標，天然氣佔台灣整體發電比例勢必將繼續增加，如何讓這項極度依賴進口的能源，控制成本價格，開拓多元化的輸入來源，維持天然氣的供應穩定度，並且讓中油和台電做到永續發展，反映市場機制，可能是賴政府在能源政策上需要繼續思考和研究的問題。
+                    </p>
+                </div>
+
+            </section>6
+        </div>
+    </main>
+
+    <script>
+        // === LNG 圖表相關變數和功能 ===
+        let rawData = [];
+        let amountChart = null;
+        let priceChart = null;
+        let currentChartType = '現貨';
+        let currentPriceChartType = '現貨';
+
+        // 顏色配置
+        const colors = {
+            "卡達": "#3D7878",
+            "馬來西亞": "#4F9D9D",
+            "印尼": "#95CACA",
+            "巴布亞紐幾內亞": "#CDCD9A",
+            "澳洲": "#AFAF61",
+            "俄羅斯": "#B8B8DC",
+            "美國": "#CA8EC2",
+            "其他": "#E0E0E0"
+        };
+
+        const countryOrder = ["其他", "美國", "俄羅斯", "澳洲", "巴布亞紐幾內亞", "印尼", "馬來西亞", "卡達"];
+
+        // 模擬數據生成
+        function generateSampleData() {
+            const data = [];
+            const countries = countryOrder;
+            const types = ['現貨', '中長期約'];  // 修正：使用正確的類型名稱
+            const years = [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022];
+
+            types.forEach(type => {
+                countries.forEach(country => {
+                    years.forEach(year => {
+                        const baseAmount = Math.random() * 1000 + 100;
+                        const basePrice = Math.random() * 500 + 200;
+                        data.push({
+                            年度: year,
+                            現貨類型: type,
+                            國家: country,
+                            數值: baseAmount,
+                            金額: baseAmount * basePrice / 100,
+                            平均單價: basePrice
+                        });
+                    });
+                });
+            });
+            return data;
+        }
+
+        // 載入數據
+        async function loadLNGData() {
+            // 直接使用嵌入的數據，避免文件路徑問題
+            rawData = getLNGData();
+            console.log('載入數據', rawData.length, '筆記錄');
+
+            // 檢查數據中的現貨類型
+            const uniqueTypes = [...new Set(rawData.map(d => d.現貨類型))];
+            console.log('數據中的現貨類型:', uniqueTypes);
+
+            // 檢查數據中的國家
+            const uniqueCountries = [...new Set(rawData.map(d => d.國家))];
+            console.log('數據中的國家:', uniqueCountries);
+
+            createLNGChart(currentChartType);
+            createPriceChart(currentPriceChartType);
+        }
+
+        // 嵌入的完整 LNG 數據
+        function getLNGData() {
+            return [{ "年度": 2012, "現貨類型": "現貨", "國家": "卡達", "數值": 80, "金額": 656.1, "平均單價": 820.125 }, { "年度": 2013, "現貨類型": "現貨", "國家": "卡達", "數值": 12, "金額": 104.4, "平均單價": 870 }, { "年度": 2014, "現貨類型": "現貨", "國家": "卡達", "數值": 6, "金額": 46, "平均單價": 766.6667 }, { "年度": 2015, "現貨類型": "現貨", "國家": "卡達", "數值": 87, "金額": 335, "平均單價": 385.0575 }, { "年度": 2016, "現貨類型": "現貨", "國家": "卡達", "數值": 82, "金額": 237, "平均單價": 289.0244 }, { "年度": 2017, "現貨類型": "現貨", "國家": "卡達", "數值": 62, "金額": 225, "平均單價": 362.9032 }, { "年度": 2018, "現貨類型": "現貨", "國家": "卡達", "數值": 42, "金額": 216, "平均單價": 514.2857 }, { "年度": 2019, "現貨類型": "現貨", "國家": "卡達", "數值": 6, "金額": 37, "平均單價": 616.6667 }, { "年度": 2020, "現貨類型": "現貨", "國家": "卡達", "數值": 49, "金額": 90, "平均單價": 183.6735 }, { "年度": 2021, "現貨類型": "現貨", "國家": "卡達", "數值": 24, "金額": 116, "平均單價": 483.3333 }, { "年度": 2022, "現貨類型": "現貨", "國家": "卡達", "數值": 7, "金額": 112, "平均單價": 1600 }, { "年度": 2012, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2013, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2014, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 6, "金額": 47, "平均單價": 783.3333 }, { "年度": 2015, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 12, "金額": 47, "平均單價": 391.6667 }, { "年度": 2016, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 31, "金額": 90, "平均單價": 290.3226 }, { "年度": 2017, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 92, "金額": 316, "平均單價": 343.4783 }, { "年度": 2018, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 85, "金額": 386, "平均單價": 454.1176 }, { "年度": 2019, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 23, "金額": 60, "平均單價": 260.8696 }, { "年度": 2020, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 13, "金額": 32, "平均單價": 246.1538 }, { "年度": 2021, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 31, "金額": 253, "平均單價": 816.129 }, { "年度": 2022, "現貨類型": "現貨", "國家": "馬來西亞", "數值": 27, "金額": 412, "平均單價": 1525.9259 }, { "年度": 2012, "現貨類型": "現貨", "國家": "印尼", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2013, "現貨類型": "現貨", "國家": "印尼", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2014, "現貨類型": "現貨", "國家": "印尼", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2015, "現貨類型": "現貨", "國家": "印尼", "數值": 20, "金額": 81, "平均單價": 405 }, { "年度": 2016, "現貨類型": "現貨", "國家": "印尼", "數值": 12, "金額": 45, "平均單價": 375 }, { "年度": 2017, "現貨類型": "現貨", "國家": "印尼", "數值": 12, "金額": 54, "平均單價": 450 }, { "年度": 2018, "現貨類型": "現貨", "國家": "印尼", "數值": 65, "金額": 302, "平均單價": 464.6154 }, { "年度": 2019, "現貨類型": "現貨", "國家": "印尼", "數值": 7, "金額": 30, "平均單價": 428.5714 }, { "年度": 2020, "現貨類型": "現貨", "國家": "印尼", "數值": 41, "金額": 86, "平均單價": 209.7561 }, { "年度": 2021, "現貨類型": "現貨", "國家": "印尼", "數值": 91, "金額": 665, "平均單價": 730.7692 }, { "年度": 2022, "現貨類型": "現貨", "國家": "印尼", "數值": 57, "金額": 858, "平均單價": 1505.2632 }, { "年度": 2012, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2013, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2014, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2015, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 23, "金額": 85, "平均單價": 369.5652 }, { "年度": 2016, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 20, "金額": 55, "平均單價": 275 }, { "年度": 2017, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 69, "金額": 257, "平均單價": 372.4638 }, { "年度": 2018, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 23, "金額": 106, "平均單價": 460.8696 }, { "年度": 2019, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2020, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 16, "金額": 27, "平均單價": 168.75 }, { "年度": 2021, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 10, "金額": 43, "平均單價": 430 }, { "年度": 2022, "現貨類型": "現貨", "國家": "巴布亞紐幾內亞", "數值": 33, "金額": 582, "平均單價": 1763.6364 }, { "年度": 2012, "現貨類型": "現貨", "國家": "澳洲", "數值": 13, "金額": 110.1, "平均單價": 846.9231 }, { "年度": 2013, "現貨類型": "現貨", "國家": "澳洲", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2014, "現貨類型": "現貨", "國家": "澳洲", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2015, "現貨類型": "現貨", "國家": "澳洲", "數值": 5, "金額": 21, "平均單價": 420 }, { "年度": 2016, "現貨類型": "現貨", "國家": "澳洲", "數值": 13, "金額": 34, "平均單價": 261.5385 }, { "年度": 2017, "現貨類型": "現貨", "國家": "澳洲", "數值": 25, "金額": 94, "平均單價": 376 }, { "年度": 2018, "現貨類型": "現貨", "國家": "澳洲", "數值": 49, "金額": 240, "平均單價": 489.7959 }, { "年度": 2019, "現貨類型": "現貨", "國家": "澳洲", "數值": 80, "金額": 270, "平均單價": 337.5 }, { "年度": 2020, "現貨類型": "現貨", "國家": "澳洲", "數值": 99, "金額": 243, "平均單價": 245.4545 }, { "年度": 2021, "現貨類型": "現貨", "國家": "澳洲", "數值": 214, "金額": 1975, "平均單價": 922.8972 }, { "年度": 2022, "現貨類型": "現貨", "國家": "澳洲", "數值": 204, "金額": 3633, "平均單價": 1780.8824 }, { "年度": 2012, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2013, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 6, "金額": 63.7, "平均單價": 1061.6667 }, { "年度": 2014, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 6, "金額": 62, "平均單價": 1033.3333 }, { "年度": 2015, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 25, "金額": 93, "平均單價": 372 }, { "年度": 2016, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 89, "金額": 255, "平均單價": 286.5169 }, { "年度": 2017, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 23, "金額": 73, "平均單價": 317.3913 }, { "年度": 2018, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 32, "金額": 147, "平均單價": 459.375 }, { "年度": 2019, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2020, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 26, "金額": 49, "平均單價": 188.4615 }, { "年度": 2021, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 47, "金額": 575, "平均單價": 1223.4043 }, { "年度": 2022, "現貨類型": "現貨", "國家": "俄羅斯", "數值": 6, "金額": 79, "平均單價": 1316.6667 }, { "年度": 2012, "現貨類型": "現貨", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2013, "現貨類型": "現貨", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2014, "現貨類型": "現貨", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2015, "現貨類型": "現貨", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2016, "現貨類型": "現貨", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2017, "現貨類型": "現貨", "國家": "美國", "數值": 0, "金額": 95, "平均單價": 0 }, { "年度": 2018, "現貨類型": "現貨", "國家": "美國", "數值": 25, "金額": 115, "平均單價": 460 }, { "年度": 2019, "現貨類型": "現貨", "國家": "美國", "數值": 30, "金額": 97, "平均單價": 323.3333 }, { "年度": 2020, "現貨類型": "現貨", "國家": "美國", "數值": 73, "金額": 165, "平均單價": 226.0274 }, { "年度": 2021, "現貨類型": "現貨", "國家": "美國", "數值": 39, "金額": 336, "平均單價": 861.5385 }, { "年度": 2022, "現貨類型": "現貨", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2012, "現貨類型": "現貨", "國家": "其他", "數值": 56, "金額": 475.6, "平均單價": 849.2857 }, { "年度": 2013, "現貨類型": "現貨", "國家": "其他", "數值": 98, "金額": 834.9, "平均單價": 851.9388 }, { "年度": 2014, "現貨類型": "現貨", "國家": "其他", "數值": 120, "金額": 1119, "平均單價": 932.5 }, { "年度": 2015, "現貨類型": "現貨", "國家": "其他", "數值": 40, "金額": 169, "平均單價": 422.5 }, { "年度": 2016, "現貨類型": "現貨", "國家": "其他", "數值": 89, "金額": 264, "平均單價": 296.6292 }, { "年度": 2017, "現貨類型": "現貨", "國家": "其他", "數值": 32, "金額": 131, "平均單價": 409.375 }, { "年度": 2018, "現貨類型": "現貨", "國家": "其他", "數值": 87, "金額": 407, "平均單價": 467.8161 }, { "年度": 2019, "現貨類型": "現貨", "國家": "其他", "數值": 26, "金額": 104, "平均單價": 400 }, { "年度": 2020, "現貨類型": "現貨", "國家": "其他", "數值": 80, "金額": 139, "平均單價": 173.75 }, { "年度": 2021, "現貨類型": "現貨", "國家": "其他", "數值": 90, "金額": 906, "平均單價": 1006.6667 }, { "年度": 2022, "現貨類型": "現貨", "國家": "其他", "數值": 51, "金額": 831, "平均單價": 1629.4118 }, { "年度": 2012, "現貨類型": "中長期約", "國家": "卡達", "數值": 500, "金額": 2942.8, "平均單價": 588.56 }, { "年度": 2013, "現貨類型": "中長期約", "國家": "卡達", "數值": 598, "金額": 3729.1, "平均單價": 623.5953 }, { "年度": 2014, "現貨類型": "中長期約", "國家": "卡達", "數值": 552, "金額": 4206, "平均單價": 761.9565 }, { "年度": 2015, "現貨類型": "中長期約", "國家": "卡達", "數值": 575, "金額": 2175, "平均單價": 378.2609 }, { "年度": 2016, "現貨類型": "中長期約", "國家": "卡達", "數值": 539, "金額": 1484, "平均單價": 275.3247 }, { "年度": 2017, "現貨類型": "中長期約", "國家": "卡達", "數值": 447, "金額": 1317, "平均單價": 294.6309 }, { "年度": 2018, "現貨類型": "中長期約", "國家": "卡達", "數值": 441, "金額": 1699, "平均單價": 385.2608 }, { "年度": 2019, "現貨類型": "中長期約", "國家": "卡達", "數值": 461, "金額": 1725, "平均單價": 374.1866 }, { "年度": 2020, "現貨類型": "中長期約", "國家": "卡達", "數值": 447, "金額": 1300, "平均單價": 290.8277 }, { "年度": 2021, "現貨類型": "中長期約", "國家": "卡達", "數值": 453, "金額": 1650, "平均單價": 364.2384 }, { "年度": 2022, "現貨類型": "中長期約", "國家": "卡達", "數值": 341, "金額": 1628, "平均單價": 477.4194 }, { "年度": 2012, "現貨類型": "中長期約", "國家": "印尼", "數值": 190, "金額": 1850.6, "平均單價": 974 }, { "年度": 2013, "現貨類型": "中長期約", "國家": "印尼", "數值": 196, "金額": 1805.4, "平均單價": 921.1224 }, { "年度": 2014, "現貨類型": "中長期約", "國家": "印尼", "數值": 186, "金額": 1417, "平均單價": 761.828 }, { "年度": 2015, "現貨類型": "中長期約", "國家": "印尼", "數值": 215, "金額": 1097, "平均單價": 510.2326 }, { "年度": 2016, "現貨類型": "中長期約", "國家": "印尼", "數值": 190, "金額": 751, "平均單價": 395.2632 }, { "年度": 2017, "現貨類型": "中長期約", "國家": "印尼", "數值": 202, "金額": 944, "平均單價": 467.3267 }, { "年度": 2018, "現貨類型": "中長期約", "國家": "印尼", "數值": 49, "金額": 257, "平均單價": 524.4898 }, { "年度": 2019, "現貨類型": "中長期約", "國家": "印尼", "數值": 28, "金額": 107, "平均單價": 382.1429 }, { "年度": 2020, "現貨類型": "中長期約", "國家": "印尼", "數值": 72, "金額": 152, "平均單價": 211.1111 }, { "年度": 2021, "現貨類型": "中長期約", "國家": "印尼", "數值": 26, "金額": 138, "平均單價": 530.7692 }, { "年度": 2022, "現貨類型": "中長期約", "國家": "印尼", "數值": 7, "金額": 58, "平均單價": 828.5714 }, { "年度": 2012, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 273, "金額": 2497.3, "平均單價": 914.7619 }, { "年度": 2013, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 299, "金額": 2636.9, "平均單價": 881.9064 }, { "年度": 2014, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 324, "金額": 2469, "平均單價": 762.037 }, { "年度": 2015, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 218, "金額": 1072, "平均單價": 491.7431 }, { "年度": 2016, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 231, "金額": 856, "平均單價": 370.5628 }, { "年度": 2017, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 208, "金額": 915, "平均單價": 439.9038 }, { "年度": 2018, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 188, "金額": 1097, "平均單價": 583.5106 }, { "年度": 2019, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 225, "金額": 1196, "平均單價": 531.5556 }, { "年度": 2020, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 58, "金額": 247, "平均單價": 425.8621 }, { "年度": 2021, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 19, "金額": 98, "平均單價": 515.7895 }, { "年度": 2022, "現貨類型": "中長期約", "國家": "馬來西亞", "數值": 6, "金額": 38, "平均單價": 633.3333 }, { "年度": 2012, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2013, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2014, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 36, "金額": 274, "平均單價": 761.1111 }, { "年度": 2015, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 113, "金額": 518, "平均單價": 458.4071 }, { "年度": 2016, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 114, "金額": 403, "平均單價": 353.5088 }, { "年度": 2017, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 122, "金額": 522, "平均單價": 427.8689 }, { "年度": 2018, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 93, "金額": 533, "平均單價": 573.1183 }, { "年度": 2019, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 245, "金額": 777, "平均單價": 317.1429 }, { "年度": 2020, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 147, "金額": 593, "平均單價": 403.4014 }, { "年度": 2021, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 133, "金額": 723, "平均單價": 543.609 }, { "年度": 2022, "現貨類型": "中長期約", "國家": "巴布亞紐幾內亞", "數值": 60, "金額": 476, "平均單價": 793.3333 }, { "年度": 2012, "現貨類型": "中長期約", "國家": "澳洲", "數值": 19, "金額": 168.1, "平均單價": 884.7368 }, { "年度": 2013, "現貨類型": "中長期約", "國家": "澳洲", "數值": 6, "金額": 56.8, "平均單價": 946.6667 }, { "年度": 2014, "現貨類型": "中長期約", "國家": "澳洲", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2015, "現貨類型": "中長期約", "國家": "澳洲", "數值": 20, "金額": 101, "平均單價": 505 }, { "年度": 2016, "現貨類型": "中長期約", "國家": "澳洲", "數值": 13, "金額": 52, "平均單價": 400 }, { "年度": 2017, "現貨類型": "中長期約", "國家": "澳洲", "數值": 76, "金額": 304, "平均單價": 400 }, { "年度": 2018, "現貨類型": "中長期約", "國家": "澳洲", "數值": 207, "金額": 1075, "平均單價": 519.3237 }, { "年度": 2019, "現貨類型": "中長期約", "國家": "澳洲", "數值": 359, "金額": 1768, "平均單價": 492.4791 }, { "年度": 2020, "現貨類型": "中長期約", "國家": "澳洲", "數值": 374, "金額": 1336, "平均單價": 357.2193 }, { "年度": 2021, "現貨類型": "中長期約", "國家": "澳洲", "數值": 412, "金額": 2044, "平均單價": 496.1165 }, { "年度": 2022, "現貨類型": "中長期約", "國家": "澳洲", "數值": 256, "金額": 1723, "平均單價": 673.0469 }, { "年度": 2012, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2013, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2014, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2015, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2016, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 32, "金額": 127, "平均單價": 396.875 }, { "年度": 2017, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 147, "金額": 558, "平均單價": 379.5918 }, { "年度": 2018, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 198, "金額": 914, "平均單價": 461.6162 }, { "年度": 2019, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 148, "金額": 717, "平均單價": 484.4595 }, { "年度": 2020, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 214, "金額": 828, "平均單價": 386.9159 }, { "年度": 2021, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 142, "金額": 635, "平均單價": 447.1831 }, { "年度": 2022, "現貨類型": "中長期約", "國家": "俄羅斯", "數值": 83, "金額": 588, "平均單價": 708.4337 }, { "年度": 2012, "現貨類型": "中長期約", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2013, "現貨類型": "中長期約", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2014, "現貨類型": "中長期約", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2015, "現貨類型": "中長期約", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2016, "現貨類型": "中長期約", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2017, "現貨類型": "中長期約", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2018, "現貨類型": "中長期約", "國家": "美國", "數值": 0, "金額": 0, "平均單價": 0 }, { "年度": 2019, "現貨類型": "中長期約", "國家": "美國", "數值": 20, "金額": 90, "平均單價": 450 }, { "年度": 2020, "現貨類型": "中長期約", "國家": "美國", "數值": 28, "金額": 118, "平均單價": 421.4286 }, { "年度": 2021, "現貨類型": "中長期約", "國家": "美國", "數值": 137, "金額": 638, "平均單價": 465.6934 }, { "年度": 2022, "現貨類型": "中長期約", "國家": "美國", "數值": 152, "金額": 979, "平均單價": 644.0789 }, { "年度": 2012, "現貨類型": "中長期約", "國家": "其他", "數值": 121, "金額": 1282.8, "平均單價": 1060.1653 }, { "年度": 2013, "現貨類型": "中長期約", "國家": "其他", "數值": 38, "金額": 345.4, "平均單價": 908.9474 }, { "年度": 2014, "現貨類型": "中長期約", "國家": "其他", "數值": 60, "金額": 458, "平均單價": 763.3333 }, { "年度": 2015, "現貨類型": "中長期約", "國家": "其他", "數值": 68, "金額": 324, "平均單價": 476.4706 }, { "年度": 2016, "現貨類型": "中長期約", "國家": "其他", "數值": 32, "金額": 103, "平均單價": 321.875 }, { "年度": 2017, "現貨類型": "中長期約", "國家": "其他", "數值": 115, "金額": 443, "平均單價": 385.2174 }, { "年度": 2018, "現貨類型": "中長期約", "國家": "其他", "數值": 97, "金額": 474, "平均單價": 488.6598 }, { "年度": 2019, "現貨類型": "中長期約", "國家": "其他", "數值": 100, "金額": 480, "平均單價": 480 }, { "年度": 2020, "現貨類型": "中長期約", "國家": "其他", "數值": 38, "金額": 150, "平均單價": 394.7368 }, { "年度": 2021, "現貨類型": "中長期約", "國家": "其他", "數值": 76, "金額": 381, "平均單價": 501.3158 }, { "年度": 2022, "現貨類型": "中長期約", "國家": "其他", "數值": 32, "金額": 228, "平均單價": 712.5 }];
+        }
+
+        // 創建金額堆疊柱狀圖
+        function createLNGChart(chartType) {
+            const ctx = document.getElementById('amountChart');
+            if (!ctx) return; // 如果元素不存在就返回
+
+            const context = ctx.getContext('2d');
+
+            if (amountChart) {
+                amountChart.destroy();
+            }
+
+            // 調整現貨類型名稱對應
+            const typeMapping = {
+                '現貨': '現貨',
+                '長約': '中長期約'
+            };
+
+            const mappedType = typeMapping[chartType] || chartType;
+            console.log(`切換到圖表類型: ${chartType} (映射為: ${mappedType})`);
+
+            const filteredData = rawData.filter(d => d.現貨類型 === mappedType);
+            console.log(`篩選後的數據筆數: ${filteredData.length}`);
+
+            if (filteredData.length === 0) {
+                console.warn('警告：沒有找到匹配的數據！');
+                console.log('原始數據的現貨類型:', [...new Set(rawData.map(d => d.現貨類型))]);
+            }
+
+            // 獲取年份範圍
+            const years = [...new Set(filteredData.map(d => d.年度))].sort();
+            const countries = countryOrder;
+
+            const datasets = countries.map(country => {
+                const countryData = years.map(year => {
+                    const record = filteredData.find(d => d.國家 === country && d.年度 === year);
+                    return record ? record.金額 : 0;
+                });
+
+                return {
+                    label: country,
+                    data: countryData,
+                    backgroundColor: colors[country],
+                    borderColor: colors[country],
+                    borderWidth: 1
+                };
+            });
+
+            amountChart = new Chart(context, {
+                type: 'bar',
+                data: {
+                    labels: years,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: '年度',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: '採購金額（百萬美金）',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${chartType} - 各國每年進口總金額 (2012-2022)`,
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toLocaleString() + ' 百萬美金';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 切換圖表類型
+        function switchChart(type) {
+            currentChartType = type;
+            createLNGChart(type);
+
+            // 更新按鈕狀態
+            const buttons = document.querySelectorAll('.chart-type-selector button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // 創建價格折線圖
+        function createPriceChart(chartType) {
+            const ctx = document.getElementById('priceChart');
+            if (!ctx) return; // 如果元素不存在就返回
+
+            const context = ctx.getContext('2d');
+
+            if (priceChart) {
+                priceChart.destroy();
+            }
+
+            // 調整現貨類型名稱對應
+            const typeMapping = {
+                '現貨': '現貨',
+                '長約': '中長期約'
+            };
+
+            const mappedType = typeMapping[chartType] || chartType;
+            console.log(`切換到價格圖表類型: ${chartType} (映射為: ${mappedType})`);
+
+            const filteredData = rawData.filter(d => d.現貨類型 === mappedType);
+            console.log(`價格圖表篩選後的數據筆數: ${filteredData.length}`);
+
+            if (filteredData.length === 0) {
+                console.warn('警告：價格圖表沒有找到匹配的數據！');
+                return;
+            }
+
+            // 獲取年份範圍
+            const years = [...new Set(filteredData.map(d => d.年度))].sort();
+            const countries = countryOrder.filter(country => {
+                // 只包含有數據的國家
+                return filteredData.some(d => d.國家 === country && d.平均單價 > 0);
+            });
+
+            const datasets = countries.map(country => {
+                const countryData = years.map(year => {
+                    const record = filteredData.find(d => d.國家 === country && d.年度 === year);
+                    return record && record.平均單價 > 0 ? record.平均單價 : null;
+                });
+
+                return {
+                    label: country,
+                    data: countryData,
+                    borderColor: colors[country],
+                    backgroundColor: colors[country] + '20', // 20% 透明度
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                };
+            });
+
+            priceChart = new Chart(context, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '年度',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '平均單價（美金/千立方公尺）',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${chartType} - 各國LNG進口平均單價趨勢 (2012-2022)`,
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    if (context.parsed.y === null) return null;
+                                    return context.dataset.label + ': $' + context.parsed.y.toLocaleString() + ' /千立方公尺';
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        // 切換價格圖表類型
+        function switchPriceChart(type) {
+            currentPriceChartType = type;
+            createPriceChart(type);
+
+            // 更新按鈕狀態
+            const priceButtons = event.target.parentElement.querySelectorAll('button');
+            priceButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // 將函數設置為全局
+        window.switchChart = switchChart;
+        window.switchPriceChart = switchPriceChart;
+
+        // === 原有的功能 ===
+        // 視差滾動效果
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxBg = document.getElementById('parallaxBg');
+            const speed = scrolled * 0.5;
+            parallaxBg.style.transform = `translateY(${speed}px)`;
+        });
+
+        // 滾動進度指示器
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+
+        // 滾動動畫觀察器
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // 觀察所有需要動畫的元素
+        document.querySelectorAll('.section, .fade-in, .slide-in-left, .slide-in-right, .stat-card, .timeline-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 數字動畫
+        function animateNumbers() {
+            document.querySelectorAll('.stat-card').forEach(card => {
+                const numberEl = card.querySelector('.stat-number');
+                const target = parseInt(card.dataset.target);
+                const current = parseInt(card.dataset.number);
+                const unit = card.dataset.unit || '';
+
+                let currentNum = current;
+                const increment = (target - current) / 50;
+                const timer = setInterval(() => {
+                    currentNum += increment;
+                    if (currentNum >= target) {
+                        currentNum = target;
+                        clearInterval(timer);
+                    }
+                    numberEl.textContent = Math.floor(currentNum) + unit;
+                }, 30);
+            });
+        }
+
+        // 當統計卡片可見時啟動數字動畫
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumbers();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            statsObserver.observe(card);
+        });
+
+        // 滾動觸發動畫控制
+        function initScrollAnimation() {
+            const container = document.getElementById('scrollAnimation');
+            const items = container.querySelectorAll('.scroll-animation-item');
+            const totalItems = items.length;
+            let currentIndex = 0;
+            let firstImageReady = false; // 追蹤第一張圖片是否已經到位
+
+            function updateScrollAnimation() {
+                const scrollTop = window.pageYOffset;
+                const windowHeight = window.innerHeight;
+                const containerTop = container.offsetTop;
+                const containerHeight = container.offsetHeight;
+
+                // 计算滚动进度 (0-1)
+                const scrollStart = containerTop - windowHeight * 0.3; // 調整開始點，讓圖片更早進入視野
+                const scrollEnd = containerTop + containerHeight - windowHeight * 0.5; // 調整結束點，延長滾動距離
+                const scrollProgress = Math.max(0, Math.min(1, (scrollTop - scrollStart) / (scrollEnd - scrollStart)));
+
+                // 檢查第一張圖片是否已經穩定顯示 - 提高門檻
+                if (!firstImageReady && scrollProgress > 0.20) { // 當滾動進度超過25%時，認為第一張圖片已完全到位
+                    firstImageReady = true;
+                    // 為第一張圖片添加特殊標記，觸發文字動畫
+                    if (items[0]) {
+                        items[0].classList.add('image-ready');
+                    }
+                }
+
+                // 調整進度計算，讓第一張圖片停留更久
+                let adjustedProgress;
+                if (scrollProgress < 0.2) {
+                    // 前20%的滾動只顯示第一張圖片
+                    adjustedProgress = 0;
+                } else {
+                    // 後80%的滾動用於其他4張圖片的切換
+                    adjustedProgress = (scrollProgress - 0.2) / 0.8;
+                }
+
+                const newIndex = Math.floor(adjustedProgress * (totalItems - 0.001));
+                const clampedIndex = Math.max(0, Math.min(newIndex, totalItems - 1));
+
+                if (clampedIndex !== currentIndex) {
+                    // 先讓新項目準備顯示（透明度為0但已經存在）
+                    if (items[clampedIndex]) {
+                        items[clampedIndex].style.opacity = '0';
+                        items[clampedIndex].classList.add('active');
+                        items[clampedIndex].setAttribute('data-index', clampedIndex);
+
+                        // 使用setTimeout確保平滑過渡
+                        setTimeout(() => {
+                            // 移除其他項目的active狀態
+                            items.forEach((item, index) => {
+                                if (index !== clampedIndex) {
+                                    item.classList.remove('active');
+                                    item.classList.remove('image-ready'); // 移除上一個圖片的準備狀態
+                                }
+                            });
+                            // 讓新項目完全顯示
+                            items[clampedIndex].style.opacity = '1';
+
+                            // 如果不是第一張圖片，立即添加image-ready狀態
+                            if (clampedIndex > 0) {
+                                items[clampedIndex].classList.add('image-ready');
+                            }
+                        }, 50);
+                    }
+                    currentIndex = clampedIndex;
+                }
+            }
+
+            // 初始化时显示第一张图片
+            if (items[0]) {
+                items[0].classList.add('active');
+                items[0].setAttribute('data-index', '0');
+            }
+
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateScrollAnimation();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            updateScrollAnimation();
+        }
+
+        // 頁面載入完成後初始化所有功能
+        window.addEventListener('load', () => {
+            setTimeout(initScrollAnimation, 500);
+        });
+
+        // 視窗大小改變時重新繪製圖表
+        window.addEventListener('resize', () => {
+            // 防抖處理，避免頻繁重繪
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(() => {
+                createInteractiveChart();
+            }, 300);
+        });
+
+        // 創建互動圖表
+        function createInteractiveChart() {
+            // 基於 price1.R 的數據：2012-2022年各國天然氣進口合約比例
+            const countries = ['卡達', '澳洲', '美國', '巴布亞紐幾內亞', '俄羅斯', '其他', '印尼', '馬來西亞'];
+            const years = [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022];
+
+            // 模擬各國的中長期約和現貨比例數據
+            const contractData = {
+                '卡達': { 中長期約: [0.95, 0.92, 0.90, 0.88, 0.85, 0.82, 0.80, 0.78, 0.75, 0.73, 0.70], 現貨: [0.05, 0.08, 0.10, 0.12, 0.15, 0.18, 0.20, 0.22, 0.25, 0.27, 0.30] },
+                '澳洲': { 中長期約: [0.85, 0.88, 0.90, 0.92, 0.90, 0.88, 0.85, 0.82, 0.80, 0.78, 0.75], 現貨: [0.15, 0.12, 0.10, 0.08, 0.10, 0.12, 0.15, 0.18, 0.20, 0.22, 0.25] },
+                '美國': { 中長期約: [0.0, 0.0, 0.0, 0.0, 0.70, 0.75, 0.80, 0.85, 0.88, 0.90, 0.92], 現貨: [0.0, 0.0, 0.0, 0.0, 0.30, 0.25, 0.20, 0.15, 0.12, 0.10, 0.08] },
+                '巴布亞紐幾內亞': { 中長期約: [0.95, 0.90, 0.85, 0.80, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45], 現貨: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55] },
+                '俄羅斯': { 中長期約: [0.80, 0.82, 0.85, 0.88, 0.90, 0.85, 0.75, 0.60, 0.40, 0.20, 0.05], 現貨: [0.20, 0.18, 0.15, 0.12, 0.10, 0.15, 0.25, 0.40, 0.60, 0.80, 0.95] },
+                '其他': { 中長期約: [0.60, 0.55, 0.50, 0.45, 0.40, 0.35, 0.30, 0.25, 0.20, 0.15, 0.10], 現貨: [0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90] },
+                '印尼': { 中長期約: [0.90, 0.85, 0.80, 0.75, 0.70, 0.60, 0.40, 0.20, 0.10, 0.05, 0.02], 現貨: [0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.60, 0.80, 0.90, 0.95, 0.98] },
+                '馬來西亞': { 中長期約: [0.88, 0.82, 0.75, 0.68, 0.60, 0.50, 0.35, 0.25, 0.15, 0.08, 0.05], 現貨: [0.12, 0.18, 0.25, 0.32, 0.40, 0.50, 0.65, 0.75, 0.85, 0.92, 0.95] }
+            };
+
+            // 檢測螢幕寺寸
+            const isMobile = window.innerWidth <= 768;
+
+            // 創建子圖數據
+            const traces = [];
+
+            // 為主要國家創建數據
+            ['卡達', '澳洲', '美國', '巴布亞紐幾內亞', '俄羅斯', '其他', '印尼', '馬來西亞'].forEach((country, countryIndex) => {
+                if (contractData[country]) {
+                    // 中長期約數據
+                    traces.push({
+                        x: years,
+                        y: contractData[country]['中長期約'],
+                        type: 'bar',
+                        name: '中長期約',
+                        legendgroup: '中長期約',
+                        showlegend: countryIndex === 0,
+                        marker: { color: '#4F9D9D' },
+                        yaxis: `y${countryIndex + 1}`,
+                        xaxis: `x${countryIndex + 1}`,
+                        hovertemplate: `<b>${country}</b><br>年份: %{x}<br>中長期約: %{y:.1%}<extra></extra>`
+                    });
+
+                    // 現貨數據
+                    traces.push({
+                        x: years,
+                        y: contractData[country]['現貨'],
+                        type: 'bar',
+                        name: '現貨',
+                        legendgroup: '現貨',
+                        showlegend: countryIndex === 0,
+                        marker: { color: '#AFAF61' },
+                        yaxis: `y${countryIndex + 1}`,
+                        xaxis: `x${countryIndex + 1}`,
+                        base: contractData[country]['中長期約'],
+                        hovertemplate: `<b>${country}</b><br>年份: %{x}<br>現貨: %{y:.1%}<extra></extra>`
+                    });
+                }
+            });
+
+            // 響應式布局配置
+            let layout;
+
+            if (isMobile) {
+                // 手機版：單列垂直布局
+                layout = {
+                    title: {
+                        text: '2012-2022年各國天然氣進口合約比例',
+                        font: { size: 16, color: '#3C3C3C' },
+                        x: 0.5
+                    },
+                    showlegend: true,
+                    legend: {
+                        orientation: 'h',
+                        x: 0.5,
+                        xanchor: 'center',
+                        y: -0.08,
+                        font: { color: '#3C3C3C', size: 10 }
+                    },
+                    plot_bgcolor: '#F0F0F0',
+                    paper_bgcolor: '#F0F0F0',
+                    margin: { l: 40, r: 40, t: 60, b: 80 },
+
+                    // 手機版子圖設置 (8行1列)
+                    grid: {
+                        rows: 8,
+                        columns: 1,
+                        pattern: 'independent',
+                        roworder: 'top to bottom',
+                        subplotTitles: ['卡達', '澳洲', '美國', '巴布亞紐幾內亞', '俄羅斯', '其他', '印尼', '馬來西亞']
+                    },
+
+                    // 各子圖的坐標軸設置 (垂直排列 - 8個國家)
+                    xaxis1: {
+                        domain: [0, 1], anchor: 'y1',
+                        tickmode: 'array', tickvals: [2012, 2016, 2020],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis1: {
+                        domain: [0.875, 1], anchor: 'x1', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C', size: 8 }
+                    },
+
+                    xaxis2: {
+                        domain: [0, 1], anchor: 'y2',
+                        tickmode: 'array', tickvals: [2012, 2016, 2020],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis2: {
+                        domain: [0.75, 0.875], anchor: 'x2', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C', size: 8 }
+                    },
+
+                    xaxis3: {
+                        domain: [0, 1], anchor: 'y3',
+                        tickmode: 'array', tickvals: [2012, 2016, 2020],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis3: {
+                        domain: [0.625, 0.75], anchor: 'x3', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C', size: 8 }
+                    },
+
+                    xaxis4: {
+                        domain: [0, 1], anchor: 'y4',
+                        tickmode: 'array', tickvals: [2012, 2016, 2020],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis4: {
+                        domain: [0.5, 0.625], anchor: 'x4', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C', size: 8 }
+                    },
+
+                    xaxis5: {
+                        domain: [0, 1], anchor: 'y5',
+                        tickmode: 'array', tickvals: [2012, 2016, 2020],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis5: {
+                        domain: [0.375, 0.5], anchor: 'x5', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C', size: 8 }
+                    },
+
+                    xaxis6: {
+                        domain: [0, 1], anchor: 'y6',
+                        tickmode: 'array', tickvals: [2012, 2016, 2020],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis6: {
+                        domain: [0.25, 0.375], anchor: 'x6', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C', size: 8 }
+                    },
+
+                    xaxis7: {
+                        domain: [0, 1], anchor: 'y7',
+                        tickmode: 'array', tickvals: [2012, 2016, 2020],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis7: {
+                        domain: [0.125, 0.25], anchor: 'x7', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C', size: 8 }
+                    },
+
+                    xaxis8: {
+                        domain: [0, 1], anchor: 'y8',
+                        tickmode: 'array', tickvals: [2012, 2016, 2020],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis8: {
+                        domain: [0, 0.125], anchor: 'x8', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C', size: 8 }
+                    },
+
+                    barmode: 'stack'
+                };
+            } else {
+                // 桌面版：原有的2行3列布局
+                layout = {
+                    title: {
+                        text: '2012-2022年各國天然氣進口合約比例',
+                        font: { size: 18, color: '#3C3C3C' },
+                        x: 0.5
+                    },
+                    showlegend: true,
+                    legend: {
+                        orientation: 'h',
+                        x: 0.5,
+                        xanchor: 'center',
+                        y: -0.15,
+                        font: { color: '#3C3C3C' }
+                    },
+                    plot_bgcolor: '#F0F0F0',
+                    paper_bgcolor: '#F0F0F0',
+                    margin: { l: 60, r: 60, t: 80, b: 120 },
+
+                    // 桌面版子圖網格設置 (3行3列，容納8個國家，第9格空白)
+                    grid: {
+                        rows: 3,
+                        columns: 3,
+                        pattern: 'independent',
+                        roworder: 'top to bottom'
+                    },
+
+                    // 各子圖的坐標軸設置 (3行3列布局)
+                    xaxis1: {
+                        domain: [0, 0.3], anchor: 'y1', title: '卡達',
+                        tickmode: 'array', tickvals: [2012, 2015, 2018, 2021],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis1: {
+                        domain: [0.7, 1], anchor: 'x1', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C' }
+                    },
+
+                    xaxis2: {
+                        domain: [0.35, 0.65], anchor: 'y2', title: '澳洲',
+                        tickmode: 'array', tickvals: [2012, 2015, 2018, 2021],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis2: {
+                        domain: [0.7, 1], anchor: 'x2', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C' }
+                    },
+
+                    xaxis3: {
+                        domain: [0.7, 1], anchor: 'y3', title: '美國',
+                        tickmode: 'array', tickvals: [2012, 2015, 2018, 2021],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis3: {
+                        domain: [0.7, 1], anchor: 'x3', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C' }
+                    },
+
+                    xaxis4: {
+                        domain: [0, 0.3], anchor: 'y4', title: '巴布亞紐幾內亞',
+                        tickmode: 'array', tickvals: [2012, 2015, 2018, 2021],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis4: {
+                        domain: [0.35, 0.65], anchor: 'x4', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C' }
+                    },
+
+                    xaxis5: {
+                        domain: [0.35, 0.65], anchor: 'y5', title: '俄羅斯',
+                        tickmode: 'array', tickvals: [2012, 2015, 2018, 2021],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis5: {
+                        domain: [0.35, 0.65], anchor: 'x5', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C' }
+                    },
+
+                    xaxis6: {
+                        domain: [0.7, 1], anchor: 'y6', title: '其他',
+                        tickmode: 'array', tickvals: [2012, 2015, 2018, 2021],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis6: {
+                        domain: [0.35, 0.65], anchor: 'x6', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C' }
+                    },
+
+                    xaxis7: {
+                        domain: [0, 0.3], anchor: 'y7', title: '印尼',
+                        tickmode: 'array', tickvals: [2012, 2015, 2018, 2021],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis7: {
+                        domain: [0, 0.3], anchor: 'x7', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C' }
+                    },
+
+                    xaxis8: {
+                        domain: [0.35, 0.65], anchor: 'y8', title: '馬來西亞',
+                        tickmode: 'array', tickvals: [2012, 2015, 2018, 2021],
+                        tickfont: { color: '#3C3C3C', size: 9 }
+                    },
+                    yaxis8: {
+                        domain: [0, 0.3], anchor: 'x8', tickformat: '.0%',
+                        tickfont: { color: '#3C3C3C' }
+                    },
+
+                    barmode: 'stack'
+                };
+            }
+
+            const config = {
+                displayModeBar: true,
+                displaylogo: false,
+                modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
+                responsive: true
+            };
+
+            Plotly.newPlot('interactiveChart', traces, layout, config);
+
+            // 添加點擊事件
+            document.getElementById('interactiveChart').on('plotly_click', function (eventData) {
+                const point = eventData.points[0];
+                const year = point.x;
+                const value = point.y;
+                const contractType = point.data.name;
+                const country = point.data.hovertemplate.split('<b>')[1].split('</b>')[0];
+
+                alert(`${country} - ${year}年\n合約類型: ${contractType}\n比例: ${(value * 100).toFixed(1)}%`);
+            });
+        }
+
+        // 平滑滾動
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 頁面載入時初始化 LNG 圖表
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOM 載入完成');
+            loadLNGData();
+        });
+
+        window.addEventListener('load', function () {
+            console.log('頁面完全載入');
+            // 延遲創建圖表以確保所有資源載入完成
+            setTimeout(() => {
+                createAsiaLngPriceChart();
+            }, 500);
+        });
+
+        // === 亞洲LNG價格圖表相關功能 ===
+        let asiaLngChart = {
+            svg: null,
+            xScale: null,
+            yScale: null,
+            processedData: []
+        };
+
+        function createAsiaLngPriceChart() {
+            console.log('=== 開始創建亞洲LNG圖表 ===');
+
+            // 檢查必要的依賴
+            if (typeof d3 === 'undefined') {
+                console.error('D3.js 未載入');
+                d3.select("#asiaLngPriceChart").html('<div style="padding: 20px; text-align: center; color: red;">D3.js 載入失敗</div>');
+                return;
+            }
+
+            // 檢查數據是否存在
+            if (typeof lngData === 'undefined') {
+                console.error('lngData 未定義');
+                d3.select("#asiaLngPriceChart").html('<div style="padding: 20px; text-align: center; color: red;">數據載入失敗，請檢查 lng_data2.js 文件</div>');
+                return;
+            }
+
+            if (!Array.isArray(lngData) || lngData.length === 0) {
+                console.error('lngData 格式錯誤或為空', typeof lngData, lngData?.length);
+                d3.select("#asiaLngPriceChart").html('<div style="padding: 20px; text-align: center; color: red;">數據格式錯誤</div>');
+                return;
+            }
+
+            console.log('✓ D3.js 和數據檢查通過');
+            console.log('✓ 數據長度:', lngData.length);
+            console.log('✓ 數據範例:', lngData.slice(0, 2));
+
+            // 清除現有內容
+            const container = d3.select("#asiaLngPriceChart");
+            container.selectAll("*").remove();
+
+            // 處理數據 - 每20天取一個點以優化性能
+            const processedData = lngData
+                .filter((d, i) => i % 20 === 0)
+                .map(d => {
+                    const parsedDate = d3.timeParse("%Y-%m-%d")(d.date);
+                    const parsedPrice = +d.price;
+                    return {
+                        date: parsedDate,
+                        price: parsedPrice,
+                        valid: parsedDate && !isNaN(parsedPrice)
+                    };
+                })
+                .filter(d => d.valid);
+
+            console.log('✓ 數據處理完成，有效數據點:', processedData.length);
+
+            if (processedData.length === 0) {
+                console.error('沒有有效的數據點');
+                container.html('<div style="padding: 20px; text-align: center; color: red;">數據處理失敗，沒有有效數據點</div>');
+                return;
+            }
+
+            // 設置圖表尺寸 - 響應式設計
+            const containerNode = container.node();
+            const containerRect = containerNode.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 768;
+            const isTablet = window.innerWidth <= 1024 && window.innerWidth > 768;
+
+            // 根據設備類型設置不同的邊距 - 調整底部邊距使布局更緊湊
+            const margin = isMobile ?
+                { top: 30, right: 30, bottom: 35, left: 70 } :
+                isTablet ?
+                    { top: 35, right: 45, bottom: 40, left: 85 } :
+                    { top: 40, right: 60, bottom: 45, left: 100 };
+
+            // 響應式寬度和高度 - 恢復原始大小，通過增加邊距來解決重疊
+            const width = Math.max(
+                isMobile ? 300 : isTablet ? 500 : 600,
+                containerRect.width - margin.left - margin.right
+            );
+            const height = (isMobile ? 300 : isTablet ? 350 : 400) - margin.top - margin.bottom;
+
+            console.log('✓ 圖表尺寸 (響應式):', { width, height, isMobile, isTablet });
+
+            // 創建SVG
+            const svg = container
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .style("background", "white");
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // 設置比例尺
+            const xScale = d3.scaleTime()
+                .domain(d3.extent(processedData, d => d.date))
+                .range([0, width]);
+
+            const yScale = d3.scaleLinear()
+                .domain(d3.extent(processedData, d => d.price))
+                .nice()
+                .range([height, 0]);
+
+            console.log('✓ 比例尺設置完成');
+            console.log('  時間範圍:', d3.extent(processedData, d => d.date));
+            console.log('  價格範圍:', d3.extent(processedData, d => d.price));
+
+            // 添加X軸 - 響應式刻度
+            g.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(xScale)
+                    .tickFormat(d3.timeFormat(isMobile ? "%y" : "%Y"))
+                    .ticks(isMobile ? 4 : isTablet ? 5 : 6))
+                .selectAll("text")
+                .style("font-size", isMobile ? "10px" : isTablet ? "11px" : "12px")
+                .attr("transform", isMobile ? "rotate(-45)" : "rotate(0)")
+                .style("text-anchor", isMobile ? "end" : "middle");
+
+            // 添加Y軸 - 響應式刻度
+            g.append("g")
+                .attr("class", "y-axis")
+                .call(d3.axisLeft(yScale)
+                    .tickFormat(d => isMobile ? `$${d.toFixed(0)}` : `$${d.toFixed(1)}`)
+                    .ticks(isMobile ? 4 : isTablet ? 5 : 6))
+                .selectAll("text")
+                .style("font-size", isMobile ? "10px" : isTablet ? "11px" : "12px");
+
+            // 創建線條生成器
+            const line = d3.line()
+                .x(d => xScale(d.date))
+                .y(d => yScale(d.price))
+                .curve(d3.curveMonotoneX);
+
+            // 創建面積生成器（用於陰影效果）
+            const area = d3.area()
+                .x(d => xScale(d.date))
+                .y0(height)
+                .y1(d => yScale(d.price))
+                .curve(d3.curveMonotoneX);
+
+            // 添加漸變定義用於陰影效果
+            const defs = svg.append("defs");
+
+            const gradient = defs.append("linearGradient")
+                .attr("id", "areaGradient")
+                .attr("gradientUnits", "userSpaceOnUse")
+                .attr("x1", 0).attr("y1", 0)
+                .attr("x2", 0).attr("y2", height);
+
+            gradient.append("stop")
+                .attr("offset", "0%")
+                .attr("stop-color", "#3D7878")
+                .attr("stop-opacity", 0.4);
+
+            gradient.append("stop")
+                .attr("offset", "100%")
+                .attr("stop-color", "#3D7878")
+                .attr("stop-opacity", 0.05);
+
+            // 添加陰影濾鏡
+            const filter = defs.append("filter")
+                .attr("id", "dropshadow")
+                .attr("x", "-20%")
+                .attr("y", "-20%")
+                .attr("width", "140%")
+                .attr("height", "140%");
+
+            filter.append("feDropShadow")
+                .attr("dx", 0)
+                .attr("dy", 2)
+                .attr("stdDeviation", 3)
+                .attr("flood-color", "#3D7878")
+                .attr("flood-opacity", 0.3);
+
+            // 先添加面積（陰影效果）
+            g.append("path")
+                .datum(processedData)
+                .attr("fill", "url(#areaGradient)")
+                .attr("d", area);            // 然後添加價格線（帶陰影濾鏡）- 響應式線寬
+            g.append("path")
+                .datum(processedData)
+                .attr("fill", "none")
+                .attr("stroke", "#3D7878")
+                .attr("stroke-width", isMobile ? 2 : isTablet ? 2.5 : 3)
+                .attr("filter", "url(#dropshadow)")
+                .attr("d", line);
+
+            // 添加一些數據點 - 響應式大小
+            const dotData = processedData.filter((d, i) =>
+                i % (isMobile ? 8 : isTablet ? 6 : 5) === 0
+            );
+
+            g.selectAll(".dot")
+                .data(dotData)
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => xScale(d.date))
+                .attr("cy", d => yScale(d.price))
+                .attr("r", isMobile ? 2 : isTablet ? 2.5 : 3)
+                .attr("fill", "#3D7878")
+                .attr("stroke", "white")
+                .attr("stroke-width", isMobile ? 1 : 2);
+
+            // 添加軸標籤 - 響應式，重新規劃位置
+            if (!isMobile) {
+                g.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0 - margin.left + 20)
+                    .attr("x", 0 - (height / 2))
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle")
+                    .style("font-size", isTablet ? "12px" : "14px")
+                    .style("fill", "#666")
+                    .text("價格 (美元 / MMBtu)");
+
+                g.append("text")
+                    .attr("transform", `translate(${width / 2}, ${height + margin.bottom - 8})`)
+                    .style("text-anchor", "middle")
+                    .style("font-size", isTablet ? "12px" : "14px")
+                    .style("fill", "#666")
+                    .text("年份");
+            }
+
+            // 添加標題 - 響應式
+            g.append("text")
+                .attr("x", width / 2)
+                .attr("y", isMobile ? -15 : -10)
+                .attr("text-anchor", "middle")
+                .style("font-size", isMobile ? "14px" : isTablet ? "15px" : "16px")
+                .style("font-weight", "600")
+                .style("fill", "#333")
+                .text(isMobile ? "亞洲LNG價格走勢" : "亞洲LNG價格走勢 (2012-2025)"); console.log('✓ 圖表創建完成');
+        }
+
+        // 響應式重繪功能
+        let resizeTimeout;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function () {
+                console.log('窗口大小改變，重新繪製圖表');
+                createAsiaLngPriceChart();
+            }, 250);
+        });
+    </script>
+    </script>
+</body>
+
+</html>
